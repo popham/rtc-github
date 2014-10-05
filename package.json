@@ -6,7 +6,7 @@
   "scripts": {
     "capnp": "capnpc -ojs $(find -name *.capnp)",
     "build": "npm run capnp",
-    "serve": "../bin/redis-server & node lib/server.js & wait",
+    "serve": "../bin/redis-server & ../bin/node lib/server.js & wait",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,7 +27,6 @@
     "express": "^4.9.5",
     "express-session": "^1.8.2",
     "express-ws": "^0.2.1",
-    "hiredis": "^0.1.17",
     "jade": "^1.7.0",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
