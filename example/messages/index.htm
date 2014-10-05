@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html style="height:100%">
+  <head>
+    <title>Messages App</title>
+    <link rel="stylesheet" type="text/css" href="/rtc-github/example/style/reset.css">
+    <script src="resources/requirejs/require.js"></script>
+    <script>
+        requirejs.config({
+            baseUrl : 'resources',
+            paths : {
+                'signal' : 'rtc-github-protocol',
+                'cookies' : 'cookies-js/dist/cookies.min',
+                'capnp-js' : 'capnp-js',
+                'js-signals' : 'js-signals/dist/signals',
+                'text-encoding' : 'text-encoding/lib/encoding'
+            }
+        });
+
+        requirejs(['../main']);
+    </script>
+  </head>
+  <body style="height:100%">
+    <div position="relative" style="float:left;width:30%;height:100%">
+      <iframe src="http://localhost:3000" style="width:100%;height:100%" sandbox="allow-top-navigation allow-scripts" seamless="true">
+        <p>
+          This app requires iframe support.
+          This browser does not support iframes.
+        </p>
+      </iframe>
+    </div>
+    <div position="relative" style="float:right;width:70%">
+      <div>
+        <h1>Hosts</h1>
+        <select name="hosts" id="hosts"></select>
+        <br>
+        <a id="membership" href="#">Join</a>
+      </div>
+      <div>
+        <h1>Messages</h1>
+        <div id="history"></div>
+      </div>
+      <div>
+        <textarea id="message" rows="7" cols="80"></textarea>
+        <br>
+        <a id="send" href="#">Send</a>
+        <a id="clear" href="#">Clear</a>
+      </div>
+    </div>
+  </body>
+</html>
