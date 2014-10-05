@@ -1,0 +1,12 @@
+var Google = require('passport-google-oauth').OAuth2Strategy;
+
+module.exports = function (handler) {
+    return new Google(
+        {
+            clientID : '',
+            clientSecret : '',
+            callbackURL : 'https://setex.net/google/callback'
+        },
+        handler
+    );
+};
