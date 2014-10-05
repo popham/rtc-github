@@ -6,7 +6,7 @@
   "scripts": {
     "capnp": "capnpc -ojs $(find -name *.capnp)",
     "build": "npm run capnp",
-    "serve": "redis-server & node lib/server.js & wait",
+    "serve": "../bin/redis-server & node lib/server.js & wait",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
