@@ -1,0 +1,13 @@
+{
+  "name": "rtc-github-protocol",
+  "homepage": "https://github.com/popham/rtc-github-protocol",
+  "_release": "c4763008e3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c4763008e346e30473c158fabc79dd50c8b4cccc"
+  },
+  "_source": "git://github.com/popham/rtc-github-protocol.git",
+  "_target": "*",
+  "_originalSource": "popham/rtc-github-protocol"
+}

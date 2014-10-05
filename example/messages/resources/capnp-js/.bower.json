@@ -1,0 +1,34 @@
+{
+  "name": "capnp-js",
+  "version": "0.0.5",
+  "authors": [
+    "Tim Popham"
+  ],
+  "description": "Capnproto run-time decoding and encoding for AMD",
+  "main": "index.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "capnproto",
+    "capnp",
+    "capnpc",
+    "pack",
+    "serialize",
+    "serialization"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/popham/capnp-js-amd/",
+  "ignore": [
+    "**/.*"
+  ],
+  "_release": "0.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.5",
+    "commit": "484b61e01881e280bd56008e5611502d810d3968"
+  },
+  "_source": "git://github.com/popham/capnp-js-amd.git",
+  "_target": "~0.0.5",
+  "_originalSource": "capnp-js"
+}
