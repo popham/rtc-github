@@ -1,6 +1,6 @@
 define([], function () {
 
     return {
-        socketServer : 'ws://localhost:3000/signal'
+        socketServer : 'wss://setex.net/signal'
     };
 });
