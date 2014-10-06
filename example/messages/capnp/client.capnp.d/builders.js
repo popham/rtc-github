@@ -3,6 +3,53 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
     var allocator = new Allocator();
     builders.Client = (function() {
         var Structure = scope["0xd25f3f5837562913"];
+        Structure.Group_source = (function(Parent) {
+            var Structure = builder.group(Parent._READER.Group_source);
+            Structure.prototype.which = function() {
+                return reader.primitives.uint16(this._segment, this._dataSection + 0);
+            };
+            Structure.prototype._setWhich = function(discriminant) {
+                this._zeroData(4, 4);
+                var position = this._dataSection + 0;
+                builder.primitives.uint16(discriminant, this._segment, position);
+            };
+            Structure.prototype.isUnset = function() {
+                return this.which() === 0;
+            };
+            Structure.UNSET = Structure.prototype.UNSET = 0;
+            Structure.prototype.getUnset = function() {
+                if (!this.isUnset()) {
+                    throw new Error("Attempted to access an inactive union member");
+                }
+                return null;
+            };
+            Structure.prototype.setUnset = function() {
+                this._setWhich(0);
+            };
+            Structure.prototype.isUserId = function() {
+                return this.which() === 1;
+            };
+            Structure.USER_ID = Structure.prototype.USER_ID = 1;
+            Structure.prototype.getUserId = function() {
+                if (!this.isUserId()) {
+                    throw new Error("Attempted to access an inactive union member");
+                }
+                var position = this._dataSection + 4;
+                return reader.fields.int32(0, this._segment, position);
+            };
+            Structure.prototype.setUserId = function(value) {
+                this._setWhich(1);
+                builder.fields.int32(value, 0, this._segment, this._dataSection + 4);
+            };
+            Structure.prototype._defaults = Structure._READER.prototype._defaults;
+            return Structure;
+        })(Structure);
+        Structure.prototype.getSource = function() {
+            return new Structure.Group_source(this);
+        };
+        Structure.prototype.initSource = function() {
+            return new Structure.Group_source(this);
+        };
         Structure.prototype.getMessage = function() {
             var pointer = {
                 segment: this._segment,

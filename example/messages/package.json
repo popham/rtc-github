@@ -1,0 +1,12 @@
+{
+  "name": "",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "capnp": "capnpc -ojs -I ../../../rtc-github-protocol/ capnp/*.capnp"
+  },
+  "author": "",
+  "devDependencies": {
+    "capnp-js-plugin": "0.0.7"
+  }
+}
