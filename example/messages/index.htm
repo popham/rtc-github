@@ -8,10 +8,10 @@
         requirejs.config({
             baseUrl : 'resources',
             paths : {
-                'signal' : 'rtc-github-protocol',
-                'cookies' : 'cookies-js/dist/cookies.min',
+                cookies : 'cookies-js/dist/cookies.min',
                 'capnp-js' : 'capnp-js',
                 'js-signals' : 'js-signals/dist/signals',
+                signal : 'rtc-github-protocol',
                 'text-encoding' : 'text-encoding/lib/encoding'
             }
         });
@@ -33,7 +33,9 @@
         <h1>Hosts</h1>
         <select name="hosts" id="hosts"></select>
         <br>
-        <a id="membership" href="#">Join</a>
+        <a id="offer" href="#">New</a>
+        <br>
+        <a id="accept" href="#">Join</a>
       </div>
       <div>
         <h1>Messages</h1>
