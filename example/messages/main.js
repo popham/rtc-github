@@ -1,16 +1,38 @@
-define(['./Signal', './client', './server'], function (
-           Signal,     client,     server) {
+define(['./Service', './StateMachine', './client', './server'], function (
+           Service,     StateMachine,     client,     server) {
 
+    // Mode
     var hosts = document.getElementById('hosts');
-    var membership = document.getElementById('membership');
+    var offer = document.getElementById('offer');
+    var accept = document.getElementById('accept');
 
+    // Messages
     var history = document.getElementById('history');
-
     var message = document.getElementById('message');
     var send = document.getElementById('send');
     var clear = document.getElementById('clear');
 
-    var signal = new Signal();
+    var service = new Service()
+    var state = new StateMachine(
+        'free',
+        {
+            free : {
+                host : [function () {
+                    // Spawn dedicated worker to handle messages.
+                    
+                }, 'host'],
+                join : [function () {}, 'guest']
+            },
+            host : {
+                quit : [function () {}, 'free'],
+                send : [function () {}]
+            },
+            guest : {
+                quit : [function () {}, 'free'],
+                send : [function () {}]
+            }
+        }
+    );
 
     send.addEventListener(
         'click',
