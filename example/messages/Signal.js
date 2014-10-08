@@ -1,47 +1,41 @@
-define(['cookies', 'js-signals', 'capnp-js/stream', 'capnp-js/builder/Allocator', 'signal/server.capnp.d/readers', 'signal/client.capnp.d/builders', './settings'], function (
-         cookies,      signals,            stream,                    Allocator,          server,                          client,                      settings) {
+define(['cookies', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'signal/server.capnp.d/readers', 'signal/client.capnp.d/builders', './settings'], function (
+         cookies,      signals,            packet,                    Allocator,          server,                          client,                      settings) {
 
     var allocator = new Allocator();
 
     var Signal = function () {
-        this.messaged = new signals.Signal();
+        this.sessioned = new signals.Signal();
+        this.hostsUpdated = new signals.Signal();
+        this.peered = new signals.Signal();
         this.closed = new signals.Signal();
+
         this._socket = null;
 
         this._reconnect();
 
         this.peer = {
             offer : function (uid, sdp) {
-                var request = allocator.initRoot(client.Client);
-
-                request.getTarget().setUserId(uid);
-
-                var peer = request.initPeer();
+                var root = allocator.initRoot(client.Client);
+                var peer = root.initPeer();
+                peer.getTarget().setUserId(uid);
                 var offer = peer.initOffer();
                 offer.setSdp(sdp);
-
-                this._send(request);
+                this._send(root);
             }.bind(this),
             answer : function (uid, sdp) {
-                var request = allocator.initRoot(client.Client);
-
-                request.getTarget().setUserId(uid);
-
-                var peer = request.initPeer();
+                var root = allocator.initRoot(client.Client);
+                var peer = root.initPeer();
+                peer.getTarget().setUserId(uid);
                 var answer = peer.initAnswer();
                 answer.setSdp(sdp);
-
-                this._send(request);
+                this._send(root);
             }.bind(this),
             iceCandidate : function (uid, candidate) {
-                var request = allocator.initRoot(client.Client);
-
-                request.getTarget().setUserId(uid);
-
-                var peer = request.initPeer();
+                var root = allocator.initRoot(client.Client);
+                var peer = root.initPeer();
+                peer.getTarget().setUserId(uid);
                 peer.setIceCandidate(candidate);
-
-                this._send(request);
+                this._send(root);
             }.bind(this)
         };
     };
@@ -57,30 +51,28 @@ define(['cookies', 'js-signals', 'capnp-js/stream', 'capnp-js/builder/Allocator'
         var socket = this._socket = new WebSocket(settings.socketServer);
 
         socket.onmessage = function (e) {
-            var response = stream.toArena(e.data).getRoot(server.Server);
-            this.messaged.dispatch(response);
+            var message = packet.toArena(e.data).getRoot(server.Server);
+            switch (message.which()) {
+            case message.SESSION:
+                this.sessioned.dispatch(message.getSession());
+                break;
+            case message.HOSTS_UPDATE:
+                this.hostsUpdated.dispatch(message.getHostsUpdate());
+                break;
+            case message.PEER:
+                this.peered.dispatch(message.getPeer());
+                break;
+            }
         }.bind(this);
 
         socket.onclose = function (e) {
             this._reconnect();
             this.closed.dispatch(e.wasClean, e.code, e.reason);
         }.bind(this);
-
-        socket.onopen = function () {
-            var cookie = cookies.get('session');
-            if (cookie === undefined) cookie = '[0]';
-            var sid = new Uint8Array(JSON.parse(cookie));
-            var request = allocator.initRoot(client.Client);
-            request.initSignaller();
-            request.getSignaller().setInitialSessionId(sid);
-            this._send(request);
-        }.bind(this);
     };
 
     Signal.prototype._send = function (request) {
-        stream.fromStruct(request).forEach(function (segment) {
-            this._socket.send(segment);
-        }.bind(this));
+        this._socket.send(packet.fromStruct(request));
     };
 
     return Signal;
