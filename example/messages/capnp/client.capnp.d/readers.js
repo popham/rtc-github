@@ -23,22 +23,47 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
                 }
                 return null;
             };
-            Structure.USER_ID = Structure.prototype.USER_ID = 1;
-            Structure.prototype.isUserId = function() {
+            Structure.USER = Structure.prototype.USER = 1;
+            Structure.prototype.isUser = function() {
                 return this.which() === 1;
             };
-            Structure.prototype.getUserId = function() {
-                if (!this.isUserId()) {
+            Structure.prototype.getUser = (function() {
+                var Reader = scope["0x95570979dae93deb"];
+                return function() {
+                    if (!this.isUser()) {
+                        throw new Error("Attempted to access an inactive union member");
+                    }
+                    var pointer = {
+                        segment: this._segment,
+                        position: this._pointersSection + 0
+                    };
+                    if (pointer.position < this._end && !reader.isNull(pointer)) {
+                        return Reader._deref(this._arena, pointer, this._depth + 1);
+                    } else {
+                        return this._defaults.user;
+                    }
+                };
+            })();
+            Structure.prototype.hasUser = function() {
+                if (!this.isUser()) {
                     throw new Error("Attempted to access an inactive union member");
                 }
-                var position = this._dataSection + 4;
-                if (position < this._pointersSection) {
-                    return reader.fields.int32(0, this._segment, position);
-                } else {
-                    return 0;
-                }
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                };
+                return pointer.position < this._end && !reader.isNull(pointer);
             };
-            Structure.prototype._defaults = {};
+            Structure.prototype._defaults = {
+                user: (function() {
+                    var Reader = scope["0x95570979dae93deb"];
+                    var arena = allocator._fromBase64("AAAAAAAAAAA=").asReader();
+                    return Reader._deref(arena, {
+                        segment: arena.getSegment(0),
+                        position: 0
+                    }, 0);
+                })()
+            };
             return Structure;
         })();
         Structure.prototype.getSource = function() {
@@ -47,7 +72,7 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
         Structure.prototype.getMessage = function() {
             var pointer = {
                 segment: this._segment,
-                position: this._pointersSection + 0
+                position: this._pointersSection + 8
             };
             if (pointer.position < this._end && !reader.isNull(pointer)) {
                 return reader.Text._deref(this._arena, pointer, this._depth + 1);
