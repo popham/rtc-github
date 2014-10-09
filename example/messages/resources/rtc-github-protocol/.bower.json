@@ -1,13 +1,21 @@
 {
   "name": "rtc-github-protocol",
   "homepage": "https://github.com/popham/rtc-github-protocol",
-  "_release": "c4763008e3",
+  "authors": [
+    "Tim Popham <popham@uw.edu>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "private": true,
+  "_release": "0448ca9cf7",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "c4763008e346e30473c158fabc79dd50c8b4cccc"
+    "commit": "0448ca9cf7512d761cbaec0825f78237566ea097"
   },
-  "_source": "git://github.com/popham/rtc-github-protocol.git",
+  "_source": "git://github.com/popham/rtc-github-protocol-amd.git",
   "_target": "*",
-  "_originalSource": "popham/rtc-github-protocol"
+  "_originalSource": "popham/rtc-github-protocol-amd",
+  "_direct": true
 }

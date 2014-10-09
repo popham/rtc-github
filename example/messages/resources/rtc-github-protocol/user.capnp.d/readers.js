@@ -11,7 +11,7 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
                 return 0;
             }
         };
-        Structure.prototype.getFirst = function() {
+        Structure.prototype.getName = function() {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
@@ -19,11 +19,11 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
             if (pointer.position < this._end && !reader.isNull(pointer)) {
                 return reader.Text._deref(this._arena, pointer, this._depth + 1);
             } else {
-                return this._defaults.first;
+                return this._defaults.name;
             }
         };
         Structure.prototype._defaults = {
-            first: (function() {
+            name: (function() {
                 var Reader = reader.Text;
                 var arena = allocator._fromBase64("AQAAAAoAAAAAAAAAAAAAAA==").asReader();
                 return Reader._deref(arena, {

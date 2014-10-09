@@ -4,89 +4,29 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
     builders.Client = (function() {
         var Structure = scope["0xcd62d4318b3bd10c"];
         Structure.prototype.which = function() {
-            return reader.primitives.uint16(this._segment, this._dataSection + 0);
+            return reader.primitives.uint16(this._segment, this._dataSection + 2);
         };
         Structure.prototype._setWhich = function(discriminant) {
-            this._maskData(2, 254);
-            this._zeroData(4, 4);
-            var position = this._dataSection + 0;
+            this._maskData(0, 254);
+            builder.zero.pointer(this._arena, {
+                segment: this._segment,
+                position: this._pointersSection + 0
+            });
+            var position = this._dataSection + 2;
             builder.primitives.uint16(discriminant, this._segment, position);
         };
-        Structure.prototype.isSignaller = function() {
+        Structure.prototype.isService = function() {
             return this.which() === 0;
         };
-        Structure.SIGNALLER = Structure.prototype.SIGNALLER = 0;
-        Structure.Group_signaller = (function(Parent) {
-            var Structure = builder.group(Parent._READER.Group_signaller);
-            Structure.prototype.getInitialSessionId = function() {
-                var pointer = {
-                    segment: this._segment,
-                    position: this._pointersSection + 0
-                };
-                if (reader.isNull(pointer)) {
-                    builder.copy.pointer.deep(this._defaults.initialSessionId, this._arena, pointer);
-                }
-                return builder.Data._deref(this._arena, pointer);
-            };
-            Structure.prototype.setInitialSessionId = function(value) {
-                var pointer = {
-                    segment: this._segment,
-                    position: this._pointersSection + 0
-                };
-                builder.Data._set(this._arena, pointer, value);
-            };
-            Structure.prototype.hasInitialSessionId = function() {
-                var pointer = {
-                    segment: this._segment,
-                    position: this._pointersSection + 0
-                };
-                return (!reader.isNull(pointer));
-            };
-            Structure.prototype.adoptInitialSessionId = function(value) {
-                builder.Data._adopt(this._arena, {
-                    segment: this._segment,
-                    position: this._pointersSection + 0
-                }, value);
-            };
-            Structure.prototype.disownInitialSessionId = function() {
-                var pointer = {
-                    segment: this._segment,
-                    position: this._pointersSection + 0
-                };
-                if (reader.isNull(pointer)) {
-                    return builder.Data._initOrphan(this._arena);
-                } else {
-                    var instance = builder.Data._deref(this._arena, pointer);
-                    this._arena._zero(pointer, 8);
-                    instance._isDisowned = true;
-                    return instance;
-                }
-            };
-            Structure.prototype._defaults = Structure._READER.prototype._defaults;
-            return Structure;
-        })(Structure);
-        Structure.prototype.getSignaller = function() {
-            if (!this.isSignaller()) {
-                throw new Error("Attempted to access an inactive union member");
-            }
-            return new Structure.Group_signaller(this);
-        };
-        Structure.prototype.initSignaller = function() {
-            this._setWhich(0);
-            return new Structure.Group_signaller(this);
-        };
-        Structure.prototype.isService = function() {
-            return this.which() === 1;
-        };
-        Structure.SERVICE = Structure.prototype.SERVICE = 1;
+        Structure.SERVICE = Structure.prototype.SERVICE = 0;
         Structure.Group_service = (function(Parent) {
             var Structure = builder.group(Parent._READER.Group_service);
-            Structure.prototype.getOffer = function() {
-                var position = this._dataSection + 2;
+            Structure.prototype.getIsOffering = function() {
+                var position = this._dataSection + 0;
                 return reader.fields.bool(0, this._segment, position, 0);
             };
-            Structure.prototype.setOffer = function(value) {
-                var position = this._dataSection + 2;
+            Structure.prototype.setIsOffering = function(value) {
+                var position = this._dataSection + 0;
                 builder.fields.bool(value, 0, this._segment, position, 0);
             };
             Structure.prototype._defaults = Structure._READER.prototype._defaults;
@@ -99,87 +39,72 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return new Structure.Group_service(this);
         };
         Structure.prototype.initService = function() {
-            this._setWhich(1);
+            this._setWhich(0);
             return new Structure.Group_service(this);
         };
         Structure.prototype.isPeer = function() {
-            return this.which() === 2;
+            return this.which() === 1;
         };
-        Structure.PEER = Structure.prototype.PEER = 2;
-        Structure.Group_peer = (function(Parent) {
-            var Structure = builder.group(Parent._READER.Group_peer);
-            Structure.prototype.which = function() {
-                return reader.primitives.uint16(this._segment, this._dataSection + 2);
+        Structure.PEER = Structure.prototype.PEER = 1;
+        var Builder_peer = scope["0xe5e90b52fd6c402e"];
+        Structure.prototype.initPeer = function() {
+            this._setWhich(1);
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 0
             };
-            Structure.prototype._setWhich = function(discriminant) {
-                this._zeroData(4, 4);
-                var position = this._dataSection + 2;
-                builder.primitives.uint16(discriminant, this._segment, position);
+            return Builder_peer._init(this._arena, pointer, this._depth + 1);
+        };
+        Structure.prototype.setPeer = function(value) {
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 0
             };
-            Structure.prototype.isOffer = function() {
-                return this.which() === 0;
+            Builder_peer._set(this._arena, pointer, value);
+            this._setWhich(1);
+        };
+        Structure.prototype.adoptPeer = function(value) {
+            if (Builder_peer._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
+            Builder_peer._adopt(this._arena, {
+                segment: this._segment,
+                position: this._pointersSection + 0
+            }, value);
+        };
+        Structure.prototype.disownPeer = function() {
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 0
             };
-            Structure.OFFER = Structure.prototype.OFFER = 0;
-            Structure.Group_offer = (function(Parent) {
-                var Structure = builder.group(Parent._READER.Group_offer);
-                Structure.prototype.getTarget = function() {
-                    var position = this._dataSection + 4;
-                    return reader.fields.int32(0, this._segment, position);
-                };
-                Structure.prototype.setTarget = function(value) {
-                    builder.fields.int32(value, 0, this._segment, this._dataSection + 4);
-                };
-                Structure.prototype._defaults = Structure._READER.prototype._defaults;
-                return Structure;
-            })(Structure);
-            Structure.prototype.getOffer = function() {
-                if (!this.isOffer()) {
-                    throw new Error("Attempted to access an inactive union member");
-                }
-                return new Structure.Group_offer(this);
-            };
-            Structure.prototype.initOffer = function() {
-                this._setWhich(0);
-                return new Structure.Group_offer(this);
-            };
-            Structure.prototype.isAnswer = function() {
-                return this.which() === 1;
-            };
-            Structure.ANSWER = Structure.prototype.ANSWER = 1;
-            Structure.Group_answer = (function(Parent) {
-                var Structure = builder.group(Parent._READER.Group_answer);
-                Structure.prototype.getTarget = function() {
-                    var position = this._dataSection + 4;
-                    return reader.fields.int32(0, this._segment, position);
-                };
-                Structure.prototype.setTarget = function(value) {
-                    builder.fields.int32(value, 0, this._segment, this._dataSection + 4);
-                };
-                Structure.prototype._defaults = Structure._READER.prototype._defaults;
-                return Structure;
-            })(Structure);
-            Structure.prototype.getAnswer = function() {
-                if (!this.isAnswer()) {
-                    throw new Error("Attempted to access an inactive union member");
-                }
-                return new Structure.Group_answer(this);
-            };
-            Structure.prototype.initAnswer = function() {
-                this._setWhich(1);
-                return new Structure.Group_answer(this);
-            };
-            Structure.prototype._defaults = Structure._READER.prototype._defaults;
-            return Structure;
-        })(Structure);
+            if (reader.isNull(pointer)) {
+                return Builder_peer._initOrphan(this._arena);
+            } else {
+                var instance = Builder_peer._deref(this._arena, pointer);
+                this._arena._zero(pointer, 8);
+                instance._isDisowned = true;
+                return instance;
+            }
+        };
         Structure.prototype.getPeer = function() {
             if (!this.isPeer()) {
                 throw new Error("Attempted to access an inactive union member");
             }
-            return new Structure.Group_peer(this);
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 0
+            };
+            if (reader.isNull(pointer)) {
+                builder.copy.pointer.deep(this._defaults.peer, this._arena, pointer);
+            }
+            return Builder_peer._deref(this._arena, pointer);
         };
-        Structure.prototype.initPeer = function() {
-            this._setWhich(2);
-            return new Structure.Group_peer(this);
+        Structure.prototype.hasPeer = function() {
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 0
+            };
+            return (this.isPeer() && !reader.isNull(pointer));
         };
         Structure.prototype._defaults = Structure._READER.prototype._defaults;
         return Structure;

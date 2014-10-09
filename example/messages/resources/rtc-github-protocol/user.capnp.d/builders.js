@@ -10,37 +10,37 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
         Structure.prototype.setId = function(value) {
             builder.fields.int32(value, 0, this._segment, this._dataSection + 0);
         };
-        Structure.prototype.getFirst = function() {
+        Structure.prototype.getName = function() {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
             };
             if (reader.isNull(pointer)) {
-                builder.copy.pointer.deep(this._defaults.first, this._arena, pointer);
+                builder.copy.pointer.deep(this._defaults.name, this._arena, pointer);
             }
             return builder.Text._deref(this._arena, pointer);
         };
-        Structure.prototype.setFirst = function(value) {
+        Structure.prototype.setName = function(value) {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
             };
             builder.Text._set(this._arena, pointer, value);
         };
-        Structure.prototype.hasFirst = function() {
+        Structure.prototype.hasName = function() {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
             };
             return (!reader.isNull(pointer));
         };
-        Structure.prototype.adoptFirst = function(value) {
+        Structure.prototype.adoptName = function(value) {
             builder.Text._adopt(this._arena, {
                 segment: this._segment,
                 position: this._pointersSection + 0
             }, value);
         };
-        Structure.prototype.disownFirst = function() {
+        Structure.prototype.disownName = function() {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0

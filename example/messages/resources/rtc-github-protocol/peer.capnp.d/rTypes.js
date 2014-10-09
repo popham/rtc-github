@@ -1,5 +1,5 @@
 define(['capnp-js/reader/index'], function(reader) {
     var types = {};
-    types["0x898617f522cfa2ab"] = reader.structure(7, 8, 8);
+    types["0xe5e90b52fd6c402e"] = reader.structure(7, 16, 16);
     return types;
 });
