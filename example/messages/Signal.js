@@ -1,5 +1,5 @@
-define(['cookies', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'signal/server.capnp.d/readers', 'signal/client.capnp.d/builders', './settings'], function (
-         cookies,      signals,            packet,                    Allocator,          server,                          client,                      settings) {
+define(['cookies', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'signal-protocol/server.capnp.d/readers', 'signal-protocol/client.capnp.d/builders', './settings'], function (
+         cookies,      signals,            packet,                    Allocator,                   server,                                   client,                      settings) {
 
     var allocator = new Allocator();
 
