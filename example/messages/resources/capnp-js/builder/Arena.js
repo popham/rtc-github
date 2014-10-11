@@ -5,7 +5,6 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
         this.__zero = zero;
         this._nextSize = size || 8192;
         this._segments = [];
-        // Array of Uint8Array instances (with additional `_id` and `_position` attributes).
         this._isRooted = false;
     };
     Builder.prototype.getSegment = function(id) {

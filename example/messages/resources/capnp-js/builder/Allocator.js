@@ -9,6 +9,16 @@ define([ "./Arena" ], function(Arena) {
         var zeros = new Uint8Array(length);
         segment.set(zeros, position);
     };
+    Allocator.constCast = function(reader) {
+        var arena = new Arena(Allocator.allocate, Allocator.zero);
+        if (reader._segments[0] && reader._segments[0].length >= 8) {
+            arena._isRooted = true;
+        } else {
+            arena._isRooted = false;
+        }
+        arena._segments = reader._segments;
+        return arena;
+    };
     Allocator.prototype.createArena = function(size) {
         return new Arena(Allocator.allocate, Allocator.zero, size);
     };

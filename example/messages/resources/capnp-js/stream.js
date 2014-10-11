@@ -3,7 +3,10 @@ define([ "./reader/Arena", "./reader/primitives", "./builder/primitives" ], func
         var arena = instance._arena;
         var count = arena._segments.length - 1;
         var segments = arena._segments.map(function(segment) {
-            return segment.subarray(0, segment._position);
+            var s = segment.subarray(0, segment._position);
+            s._id = segment._id;
+            s._position = segment._position;
+            return s;
         });
         /*
          * Header Length
@@ -31,7 +34,10 @@ define([ "./reader/Arena", "./reader/primitives", "./builder/primitives" ], func
         var begin = end;
         for (var i = 0; i < end; i += 4) {
             var length = reader.uint32(blob, i);
-            segments.push(blob.subarray(begin, begin + length));
+            var s = blob.subarray(begin, begin + length);
+            s._id = i;
+            s._position = length;
+            segments.push(s);
             begin += length;
         }
         return new Arena(segments);

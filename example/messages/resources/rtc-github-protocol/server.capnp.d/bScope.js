@@ -1,14 +1,9 @@
-define(['./bTypes', '../client.capnp.d/bTypes', '../user.capnp.d/bTypes'], function(types, file0, file1) {
+define(['./bTypes', '../user.capnp.d/bTypes', '../peer.capnp.d/bTypes'], function(types, file0, file1) {
     var scope = {};
-    var id;
-    for (id in file0) {
-        scope[id] = file0[id];
-    }
-    for (id in file1) {
-        scope[id] = file1[id];
-    }
-    for (id in types) {
+    for (var id in types) {
         scope[id] = types[id];
     }
+    scope["0x95570979dae93deb"] = file0["0x95570979dae93deb"];
+    scope["0xe5e90b52fd6c402e"] = file1["0xe5e90b52fd6c402e"];
     return scope;
 });
