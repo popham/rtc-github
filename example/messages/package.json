@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "capnp": "capnpc -ojs -I ../../../rtc-github-protocol/ capnp/*.capnp"
+    "clean": "rm -rf capnp/*.capnp.d",
+    "capnp": "capnpc -ojs -I ./node_modules/ capnp/*.capnp",
+    "build": "npm run capnp",
+    "rebuild": "npm run clean && npm run capnp"
   },
   "author": "",
   "devDependencies": {
-    "capnp-js-plugin": "0.0.8"
+    "capnp-js-plugin": "0.0.10"
   }
 }

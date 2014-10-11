@@ -1,6 +1,6 @@
 @0xc6c0baeb8ceae645;
 
-using import "/user.capnp".User;
+using import "/rtc-github-protocol/user.capnp".User;
 
 struct Server {
     messages @0 :List(Message);

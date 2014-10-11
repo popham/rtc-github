@@ -1,6 +1,6 @@
 @0xcbcf14c1e72dfa85;
 
-using import "/user.capnp".User;
+using import "/rtc-github-protocol/user.capnp".User;
 
 struct Client {
     source :union {
