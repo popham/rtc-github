@@ -1,9 +1,8 @@
-define(['./rTypes', '../undefined.d/rTypes', 'rtc-github-protocol/user.capnp.d/rTypes'], function(types, file0, file1) {
+define(['./rTypes', 'rtc-github-protocol/user.capnp.d/rTypes'], function(types, file0) {
     var scope = {};
     for (var id in types) {
         scope[id] = types[id];
     }
-    scope["0xd3e128c467576313"] = file0["0xd3e128c467576313"];
-    scope["0x95570979dae93deb"] = file1["0x95570979dae93deb"];
+    scope["0x95570979dae93deb"] = file0["0x95570979dae93deb"];
     return scope;
 });
