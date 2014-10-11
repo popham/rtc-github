@@ -135,7 +135,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             default:
                 throw new Error('Service only accepts ice candidates or offers');
             }
-            break;
         }.bind(this));
     };
 
