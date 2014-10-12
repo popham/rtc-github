@@ -22,6 +22,11 @@ define([], function () {
     StateMachine.prototype.trigger = function (name, args) {
         var action = this._diagram[this._state][name];
 
+        if (action === undefined) {
+            var transition = this._state + " --" + args + "--> " + name;
+            throw Error("Forbidden state transition: " + transition);
+        }
+
         // Either `action[0]` is the function, or `action[0][0]` if a scope was
         // given.
         (action[0][0] || action[0]).call(action[0][1], args);
