@@ -53,7 +53,7 @@ define(['cookies', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator'
         socket.binaryType = 'arraybuffer';
 
         socket.onmessage = function (e) {
-            var message = packet.toArena(e.data).getRoot(server.Server);
+            var message = packet.toArena(new Uint8Array(e.data)).getRoot(server.Server);
             switch (message.which()) {
             case message.SESSION:
                 this.sessioned.dispatch(message.getSession());
