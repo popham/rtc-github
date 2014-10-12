@@ -50,6 +50,8 @@ define(['cookies', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator'
     Signal.prototype._reconnect = function () {
         var socket = this._socket = new WebSocket(settings.socketServer);
 
+        socket.binaryType = 'arraybuffer';
+
         socket.onmessage = function (e) {
             var message = packet.toArena(e.data).getRoot(server.Server);
             switch (message.which()) {
