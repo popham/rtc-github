@@ -6,7 +6,7 @@ html
       // The parent frame posts when its `onmessage` handler has been bound.
       // React to its "I'm ready" post.
       window.onmessage = function (e) {
-          window.parent.postMessage({status : 'logged out'});
+          window.parent.postMessage({status : 'logged out'}, "*");
       };
 
       // If the parent's "I'm ready" post fell on deaf ears, then this post
@@ -15,7 +15,7 @@ html
       // execution thread with the main frame, probably if the iframe gets its
       // own thread of execution--tolerate two posts in case the latter case
       // exists).
-      window.parent.postMessage({status : 'logged out'});
+      window.parent.postMessage({status : 'logged out'}, "*");
 
   body
     h1 Authenticate
