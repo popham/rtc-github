@@ -10,6 +10,6 @@
   },
   "author": "",
   "devDependencies": {
-    "capnp-js-plugin": "0.0.11"
+    "capnp-js-plugin": "0.0.13"
   }
 }
