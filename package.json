@@ -4,8 +4,6 @@
   "description": "Embed an RTC application in a Github page",
   "main": "index.js",
   "scripts": {
-    "capnp": "capnpc -ojs $(find -name *.capnp)",
-    "build": "npm run capnp",
     "serve": "../bin/redis-server & ../bin/node lib/server.js & wait",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
