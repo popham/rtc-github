@@ -2,6 +2,21 @@ doctype html
 html
   head
     title Signaller Login
+    script.
+      // The parent frame posts when its `onmessage` handler has been bound.
+      // React to its "I'm ready" post.
+      window.onmessage = function (e) {
+          window.parent.postMessage({status : 'logged out'});
+      };
+
+      // If the parent's "I'm ready" post fell on deaf ears, then this post
+      // saves the day.  If parent's "I'm ready" post was received, then this
+      // post will fall on deaf ears (certainly if the iframe shares an
+      // execution thread with the main frame, probably if the iframe gets its
+      // own thread of execution--tolerate two posts in case the latter case
+      // exists).
+      window.parent.postMessage({status : 'logged out'});
+
   body
     h1 Authenticate
     a(href!="#" onclick!=facebook) Facebook
