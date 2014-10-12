@@ -90,7 +90,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var client = null;
         var service = null;
 
-        var logout = [function () {
+        var logOut = [function () {
             signal.kill();
             signal = null;
         }, 'anonymous'];
@@ -99,7 +99,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             'anonymous',
             {
                 anonymous : {
-                    authenticate : [function () {
+                    logIn : [function () {
                         signal = new Signal();
                         signal.hostsUpdated.add(function (users) {
                             var options = '';
@@ -110,10 +110,11 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             });
                             hosts.innerHTML = options;
                         });
-                    }, 'authenticated']
+                    }, 'authenticated'],
+                    logOut : [function () {}]
                 },
                 authenticated : {
-                    logout : logout,
+                    logOut : logOut,
                     offer : [function () {
                         uiHost();
                         service = new Service(signal);
@@ -131,7 +132,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     }, 'guest']
                 },
                 host : {
-                    logout : logout,
+                    logOut : logOut,
                     quit : [function () {
                         uiFree();
                         service.kill();
@@ -141,7 +142,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     }, 'authenticated']
                 },
                 guest : {
-                    logout : logout,
+                    logOut : logOut,
                     quit : [function () {
                         uiFree();
                         client.kill();
@@ -155,8 +156,8 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         window.onmessage = function (e) {
             switch (e.data.status) {
-            case 'logged in': state.trigger('authenticated'); break;
-            case 'logged out': state.trigger('anonymous'); break;
+            case 'logged in': state.trigger('logIn'); break;
+            case 'logged out': state.trigger('logOut'); break;
             default: throw new Error('Unrecognized hash value');
             }
         };

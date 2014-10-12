@@ -5,11 +5,11 @@ define([], function () {
      * @param {Object} diagram - The state machine's diagram, e.g.
      *     {
      *         state1: {
-     *             event1 : [action1, "state2"],
-     *             event2 : [action2]
+     *             action1 : [someFn1, "state2"],
+     *             action2 : [someFn2]
      *         },
      *         state2 : {
-     *             event3 : [[action3, context], "state1"]
+     *             action3 : [[someFn3, context], "state1"]
      *         }
      *     }
      * @returns StateMachine
@@ -17,23 +17,31 @@ define([], function () {
     var StateMachine = function(initialState, diagram) {
         this._state = initialState;
         this._diagram = diagram;
+
+        if (diagram[initialState] === undefined)
+            throw new Error("Invalid initial state");
     };
 
     StateMachine.prototype.trigger = function (name, args) {
         var action = this._diagram[this._state][name];
 
         if (action === undefined) {
-            var transition = this._state + " --" + args + "--> " + name;
-            throw Error("Forbidden state transition: " + transition);
+            var transition = this._state + " --" + name + "("+args+")" + "--> " + name;
+            throw new Error("Forbidden state transition: " + transition);
         }
 
         // Either `action[0]` is the function, or `action[0][0]` if a scope was
         // given.
-        (action[0][0] || action[0]).call(action[0][1], args);
+        (action[0][0] || action[0]).apply(action[0][1], args);
 
         // Toggle state if the event implies a transition.  Return the state so
         // that non-transitions yield the state for callers.
-        return this._state = action[1] || this._state;
+        var nextState = action[1] || this._state;
+
+        if (this._diagram[nextState] === undefined)
+            throw new Error("Invalid target state: " + nextState);
+
+        return this._state = nextState;
     };
 
     return StateMachine;
