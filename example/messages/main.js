@@ -2,6 +2,8 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
          domReady,     StateMachine,     Service,     Client,     Signal) {
 
     domReady(function () {
+        var auth = document.getElementById('auth');
+
         // Control
         var hosts = document.getElementById('hosts');
         var offer = document.getElementById('offer');
@@ -93,13 +95,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             signal = null;
         }, 'anonymous'];
 
-        var current;
-        switch (document.URL.hash) {
-        case 'loggedIn': current = 'authenticated'; break;
-        case 'loggedOut': current = 'anonymous'; break;
-        default: throw new Error('Unrecognized hash value');
-        }
-
         var state = new StateMachine(
             'anonymous',
             {
@@ -158,7 +153,15 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             }
         );
 
-        state.trigger(current);
+        window.onmessage = function (e) {
+            switch (e.data.status) {
+            case 'logged in': state.trigger('authenticated'); break;
+            case 'logged out': state.trigger('anonymous'); break;
+            default: throw new Error('Unrecognized hash value');
+            }
+        };
+        auth.contentWindow.postMessage("I'm ready");
+
         offer.onclick = function () { state.trigger('offer'); };
         accept.onclick = function () { state.trigger('accept'); };
         quit.onclick = function () { state.trigger('quit'); };
