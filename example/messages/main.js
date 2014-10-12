@@ -160,7 +160,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             default: throw new Error('Unrecognized hash value');
             }
         };
-        auth.contentWindow.postMessage("I'm ready");
+        auth.contentWindow.postMessage("I'm ready", "*");
 
         offer.onclick = function () { state.trigger('offer'); };
         accept.onclick = function () { state.trigger('accept'); };
