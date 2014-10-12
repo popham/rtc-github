@@ -15,7 +15,7 @@
     "requirejs": "~2.1.15",
     "cookies-js": "~0.4.0",
     "js-signals": "~1.0.0",
-    "capnp-js": "~0.0.5",
+    "capnp-js": "~0.0.7",
     "rtc-github-protocol": "popham/rtc-github-protocol-amd"
   }
 }

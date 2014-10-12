@@ -20,6 +20,9 @@ define([ "./reader/Arena", "./builder/Allocator", "./builder/copy/deep" ], funct
         return singleton.subarray(0, singleton._position);
     };
     var toArena = function(blob) {
+        blob = blob.subarray();
+        blob._id = 0;
+        blob._position = blob.length;
         return new Arena([ blob ]);
     };
     return {
