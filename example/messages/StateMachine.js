@@ -12,36 +12,56 @@ define([], function () {
      *             action3 : [[someFn3, context], "state1"]
      *         }
      *     }
-     * @returns StateMachine
      */
     var StateMachine = function(initialState, diagram) {
         this._state = initialState;
         this._diagram = diagram;
+        this._queue = [];
 
         if (diagram[initialState] === undefined)
             throw new Error("Invalid initial state");
     };
 
-    StateMachine.prototype.trigger = function (name, args) {
+    var transition = function (name, args) {
+        var transition = this._state + " --" + name + "("+args+")" + "--> " + name;
         var action = this._diagram[this._state][name];
 
         if (action === undefined) {
-            var transition = this._state + " --" + name + "("+args+")" + "--> " + name;
             throw new Error("Forbidden state transition: " + transition);
         }
 
-        // Toggle state if the event implies a transition.  Return the state so
-        // that non-transitions yield the state for callers.
+        // Toggle state if the event implies a transition.
         var nextState = action[1] || this._state;
 
         if (this._diagram[nextState] === undefined)
             throw new Error("Invalid target state: " + nextState);
 
-        // Either `action[0]` is the function, or `action[0][0]` if a scope was
-        // given.
-        (action[0][0] || action[0]).apply(action[0][1], args);
+        // `action[0]` is the function, unless a scope was provided--then the
+        // function is `action[0][0]`.
+        var done = function (e) {
+            if (e) {
+                console.warn('Failed state transition: ' + transition);
+            } else {
+                this._state = nextState;
+                this._nextTick();
+            }
+        }.bind(this);
 
-        return this._state = nextState;
+        var doneTailedArgs = args.slice();
+        doneTailedArgs.push(done);
+
+        (action[0][0] || action[0]).apply(action[0][1], doneTailedArgs);
+    };
+
+    StateMachine.prototype._nextTick = function () {
+        if (this._queue.length > 0) {
+            transition.apply(this, this._queue.shift());
+        }
+    };
+
+    StateMachine.prototype.trigger = function (name, args) {
+        this._queue.push([name, args]);
+        this._nextTick();
     };
 
     return StateMachine;
