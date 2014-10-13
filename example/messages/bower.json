@@ -17,6 +17,7 @@
     "js-signals": "~1.0.0",
     "capnp-js": "~0.0.8",
     "rtc-github-protocol": "popham/rtc-github-protocol-amd",
-    "requirejs-domready": "~2.0.1"
+    "requirejs-domready": "~2.0.1",
+    "when": "~3.5.0"
   }
 }
