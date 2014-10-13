@@ -30,16 +30,16 @@ define([], function () {
             throw new Error("Forbidden state transition: " + transition);
         }
 
-        // Either `action[0]` is the function, or `action[0][0]` if a scope was
-        // given.
-        (action[0][0] || action[0]).apply(action[0][1], args);
-
         // Toggle state if the event implies a transition.  Return the state so
         // that non-transitions yield the state for callers.
         var nextState = action[1] || this._state;
 
         if (this._diagram[nextState] === undefined)
             throw new Error("Invalid target state: " + nextState);
+
+        // Either `action[0]` is the function, or `action[0][0]` if a scope was
+        // given.
+        (action[0][0] || action[0]).apply(action[0][1], args);
 
         return this._state = nextState;
     };
