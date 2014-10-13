@@ -2,6 +2,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
          domReady,     StateMachine,     Service,     Client,     Signal) {
 
     domReady(function () {
+        // Authentication IFrame
         var auth = document.getElementById('auth');
 
         // Control
@@ -56,7 +57,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var uiReset = function () {
-            hosts.disabled = false;
             offer.disabled = false;
             accept.disabled = false;
             quit.disabled = false;
@@ -65,23 +65,35 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             send.disabled = false;
             clear.disabled = false;
         };
-        var uiFree = function () {
+        var uiAnonymous = function () {
             uiReset();
+            offer.disabled = true;
+            accept.disabled = true;
             quit.disabled = true;
-            message.disabled = true;
             send.disabled = true;
             clear.disabled = true;
+
+            history.innerHTML = "";
+            message.disabled = true;
+            message.value = "";
+        };
+        var uiAuthenticated = function () {
+            uiReset();
+            quit.disabled = true;
+            send.disabled = true;
+            clear.disabled = true;
+
+            history.innerHTML = "";
+            message.disabled = true;
             message.value = "";
         };
         var uiHost = function () {
             uiReset();
-            hosts.disabled = true;
             offer.disabled = true;
             accept.disabled = true;
         };
         var uiGuest = function () {
             uiReset();
-            hosts.disabled = true;
             offer.disabled = true;
             accept.disabled = true;
         };
@@ -90,11 +102,15 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var client = null;
         var service = null;
 
+// open websocket => send hostsUpdated listing
+
         var logOut = [function () {
             signal.kill();
             signal = null;
+            uiAnonymous();
         }, 'anonymous'];
 
+        uiAnonymous();
         var state = new StateMachine(
             'anonymous',
             {
@@ -110,45 +126,46 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             });
                             hosts.innerHTML = options;
                         });
+                        uiAuthenticated();
                     }, 'authenticated'],
                     logOut : [function () {}]
                 },
                 authenticated : {
                     logOut : logOut,
                     offer : [function () {
-                        uiHost();
                         service = new Service(signal);
                         var local = service.createLocalClient();
                         local.messaged.add(onMessage);
                         send.onclick = onSend(local);
                         clear.onclick = onClear;
+                        uiHost();
                     }, 'host'],
                     accept : [function () {
-                        uiGuest();
                         client = new Client(selectedHost(), signal);
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
+                        uiGuest();
                     }, 'guest']
                 },
                 host : {
                     logOut : logOut,
                     quit : [function () {
-                        uiFree();
                         service.kill();
                         service = null;
                         send.onclick = null;
                         clear.onclick = null;
+                        uiAuthenticated();
                     }, 'authenticated']
                 },
                 guest : {
                     logOut : logOut,
                     quit : [function () {
-                        uiFree();
                         client.kill();
                         client = null;
                         send.onclick = null;
                         clear.onclick = null;
+                        uiAuthenticated();
                     }, 'authenticated']
                 }
             }
