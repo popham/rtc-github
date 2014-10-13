@@ -104,16 +104,12 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this.connection.addIceCandidate(new RTCIceCandidate(candidate));
     };
 
-    var Service = function (signal) {
-        this._hostUser = null;
+    var Service = function (signal, session) {
+        this._hostUser = session.getUser();
         this._remoteClients = {};
         this._localClients = [];
         this._worker = new Worker('kernel.js');
         this._signal = signal;
-
-        signal.sessioned.add(this._onSessioned = function (session) {
-            this._hostUser = session.getUser();
-        }.bind(this));
 
         signal.peered.add(this._onPeered = function (peer) {
             var user = peer.getSource().getUser();
@@ -152,7 +148,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this._hostUser = null;
         this._remoteClients = null;
         this._worker = null;
-        this._signal.sessioned.remove(this._onSessioned);
         this._signal.peered.remove(this._onPeered);
         this._signal = null;
     };
