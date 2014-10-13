@@ -48,6 +48,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'rtc-gith
     };
 
     Signal.prototype.kill = function () {
+        this.hostsUpdated.removeAll();
         this._socket.onclose = null;
         this._socket.close();
     };
