@@ -22,6 +22,14 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             return hosts.item(i).value;
         };
 
+        var onClear = function (event) {
+            if (message.value !== '') {
+                message.value = '';
+            }
+
+            return false;
+        };
+
         var onSend = function (client) {
             return function (event) {
                 var m = message.value.trim();
@@ -36,14 +44,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             };
         };
 
-        var onClear = function (event) {
-            if (message.value !== '') {
-                message.value = '';
-            }
-
-            return false;
-        };
-
         var onMessage = function (message) {
             var name = message.getSource().getName().asString();
             var m = message.getValue().asString().trim();
@@ -54,6 +54,15 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             }
 
             return false;
+        };
+
+        var onHostsUpdate = function (users) {
+            var options = '';
+            users.forEach(function (user) {
+                options += '<option value="'+user.getUid()+'">';
+                options += user.getName().asString();
+                options += '</option>';
+            });
         };
 
         var uiReset = function () {
@@ -105,10 +114,11 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var client = null;
         var service = null;
 
-        var logOut = [function () {
-            signal.kill();
+        var logOut = [function (done) {
+            if (signal) signal.kill();
             signal = null;
             uiAnonymous();
+            done();
         }, 'anonymous'];
 
         uiAnonymous();
@@ -116,57 +126,63 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             'anonymous',
             {
                 anonymous : {
-                    logIn : [function () {
+                    logIn : [function (done) {
                         signal = new Signal();
-                        signal.hostsUpdated.add(function (users) {
-                            var options = '';
-                            users.forEach(function (user) {
-                                options += '<option value="'+user.getUid()+'">';
-                                options += user.getName().asString();
-                                options += '</option>';
-                            });
-                            hosts.innerHTML = options;
-                        });
-                        uiAuthenticated();
+                        signal.hostsUpdated.add(onHostsUpdate);
+                        onHostsUpdate(signal.hosts);
+                        signal.connecting.done(
+                            function () { uiAuthenticated(); done(); },
+                            function (e) {
+                                signal.kill();
+                                onHostsUpdate(Signal.EMPTY_HOSTS);
+                                done(e);
+                            }
+                        );
                     }, 'authenticated'],
-                    logOut : [function () {}]
+                    logOut : [function (done) { done(); }]
                 },
                 authenticated : {
                     logOut : logOut,
-                    offer : [function () {
-                        service = new Service(signal);
-                        var local = service.createLocalClient();
-                        local.messaged.add(onMessage);
-                        send.onclick = onSend(local);
-                        clear.onclick = onClear;
-                        uiHost();
+                    offer : [function (done) {
+                        signal.connecting.done(function (session) {
+                            service = new Service(signal, session);
+                            var local = service.createLocalClient();
+                            local.messaged.add(onMessage);
+                            send.onclick = onSend(local);
+                            clear.onclick = onClear;
+                            uiHost();
+                            done()
+                        });
                     }, 'host'],
-                    accept : [function () {
+                    accept : [function (done) {
                         client = new Client(selectedHost(), signal);
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
                         uiGuest();
+                        done()
                     }, 'guest']
                 },
                 host : {
                     logOut : logOut,
-                    quit : [function () {
-                        service.kill();
+                    quit : [function (done) {
+                        if (service) service.kill();
                         service = null;
                         send.onclick = null;
                         clear.onclick = null;
                         uiAuthenticated();
+                        done();
                     }, 'authenticated']
                 },
                 guest : {
                     logOut : logOut,
-                    quit : [function () {
-                        client.kill();
+                    quit : [function (done) {
+                        if (client) client.kill();
                         client = null;
                         send.onclick = null;
                         clear.onclick = null;
                         uiAuthenticated();
+                        done();
                     }, 'authenticated']
                 }
             }
