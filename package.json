@@ -26,6 +26,7 @@
     "express-session": "^1.8.2",
     "express-ws": "^0.2.1",
     "jade": "^1.7.0",
+    "node-uuid": "^1.4.1",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
     "passport-google-oauth": "^0.1.5",
