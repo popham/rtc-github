@@ -52,7 +52,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
         };
     };
 
-    Signal.EMPTY_HOSTS = allocator.initRoot(server.Server).initHostsUpdate(0).asReader();
+    Signal.EMPTY_HOSTS = server.EMPTY_HOSTS_UPDATE;
 
     Signal.prototype.service = function (isOffering) {
         var request = allocator.initRoot(client.Client);
