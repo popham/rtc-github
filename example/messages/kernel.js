@@ -4,8 +4,8 @@ requirejs.config({
     paths : {}
 });
 
-requirejs(['capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/reader', './capnp/server.capnp.d/builder'], function (
-                     packet,                    Allocator,           client,                          server) {
+requirejs(['capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/readers', './capnp/server.capnp.d/builders'], function (
+                     packet,                    Allocator,           client,                           server) {
 
     var allocator = new Allocator();
 
