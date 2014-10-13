@@ -82,7 +82,6 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
 
         socket.onmessage = function (e) {
             var message = packet.toArena(new Uint8Array(e.data)).getRoot(server.Server);
-            var s;
             switch (message.which()) {
             case message.SESSION:
                 this._deferredConnection.resolve(message.getSession());
