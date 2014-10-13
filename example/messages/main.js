@@ -57,6 +57,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var uiReset = function () {
+            hosts.disabled = false;
             offer.disabled = false;
             accept.disabled = false;
             quit.disabled = false;
@@ -67,6 +68,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
         var uiAnonymous = function () {
             uiReset();
+            hosts.disabled = true;
             offer.disabled = true;
             accept.disabled = true;
             quit.disabled = true;
@@ -89,6 +91,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
         var uiHost = function () {
             uiReset();
+            hosts.disabled = true;
             offer.disabled = true;
             accept.disabled = true;
         };
