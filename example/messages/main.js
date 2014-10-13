@@ -102,8 +102,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var client = null;
         var service = null;
 
-// open websocket => send hostsUpdated listing
-
         var logOut = [function () {
             signal.kill();
             signal = null;
