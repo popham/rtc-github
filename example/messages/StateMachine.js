@@ -60,6 +60,7 @@ define([], function () {
     };
 
     StateMachine.prototype.trigger = function (name, args) {
+        if (args === undefined) args = [];
         this._queue.push([name, args]);
         this._nextTick();
     };
