@@ -13,8 +13,12 @@
                 domReady : 'requirejs-domready/domReady',
                 'js-signals' : 'js-signals/dist/signals',
                 'text-encoding' : 'text-encoding/lib/encoding',
-                when : 'when/when'
-            }
+            },
+            packages: [{
+                name : 'when',
+                location : 'when',
+                main : 'when'
+            }]
         });
 
         requirejs(['../main']);
