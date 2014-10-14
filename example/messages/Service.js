@@ -21,30 +21,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             throw new Error('Host user information unavailable');
         }
         var root = allocator.initRoot(client.Client);
-        var ss = root._arena.getSegment(0);
-
-        console.log("INIT ROOT");
-        var s = ''
-        for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
-        console.log(s);
-        console.log('END');
-
         root.getSource().setUser(user);
-
-        console.log("INIT ROOT");
-        var s = ''
-        for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
-        console.log(s);
-        console.log('END');
-
         root.setMessage(message);
-
-        console.log("INIT ROOT");
-        var s = ''
-        for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
-        console.log(s);
-        console.log('END');
-
         this._worker.postMessage(packet.fromStruct(root));
     };
 
