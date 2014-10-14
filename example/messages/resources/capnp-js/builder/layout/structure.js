@@ -8,7 +8,7 @@ console.log("WC");
 console.log(data);
 console.log(pointers);
 console.log(pointer.segment[pointer.position+4]);
-console.log(pointer.segment[pointer.position+5);
+console.log(pointer.segment[pointer.position+5]);
 console.log(pointer.segment[pointer.position+6]);
 console.log(pointer.segment[pointer.position+7]);
 console.log("END");
