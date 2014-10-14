@@ -37,6 +37,8 @@ define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init",
             _layout: methods.layout
         };
         Structs.prototype.get = function(index) {
+console.log(index);
+console.log(this._length);
             if (index < 0 || this._length <= index) {
                 throw new RangeError();
             }
