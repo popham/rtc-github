@@ -1,6 +1,7 @@
-define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './constants'], function(Allocator, reader, scope, constants) {
+define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './constants', '../user.capnp.d/readers', '../peer.capnp.d/readers'], function(Allocator, reader, scope, constants, file0, file1) {
     var readers = {};
     var allocator = new Allocator();
+    readers.EMPTY_HOSTS_UPDATE = constants['0xfb7024301714f2d2'];
     readers.Server = (function() {
         var Structure = scope["0x898617f522cfa2ab"];
         Structure.prototype.which = function() {

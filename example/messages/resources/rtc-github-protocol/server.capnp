@@ -3,6 +3,8 @@
 using import "user.capnp".User;
 using import "peer.capnp".Peer;
 
+const emptyHostsUpdate :List(User) = [];
+
 struct Server {
     union {
         session :group {

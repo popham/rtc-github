@@ -1,4 +1,4 @@
-define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './constants'], function(Allocator, reader, scope, constants) {
+define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './constants', '../peer.capnp.d/readers'], function(Allocator, reader, scope, constants, file0) {
     var readers = {};
     var allocator = new Allocator();
     readers.Client = (function() {
