@@ -1,9 +1,9 @@
 importScripts('resources/requirejs/require.js');
 requirejs.config({
-    baseUrl : '',
+    baseUrl : 'resources',
     paths : {
-        'capnp-js' : 'resources/capnp-js',
-        'capnp' : 'capnp'
+        'capnp' : 'capnp',
+        'rtc-github-protocol' : 'rtc-github-protocol'
     }
 });
 
