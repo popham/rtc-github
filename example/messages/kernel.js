@@ -12,7 +12,9 @@ requirejs(['capnp-js/packet', 'capnp-js/builder/Allocator', 'capnp/client.capnp.
     var allocator = new Allocator();
 
     onmessage = function (e) {
-        console.log(e.data);
+        var s = '';
+        for (var i=0; i<e.data._position; ++i) s+=' '+e.data[i];
+        console.log(s);
 
         var message = packet.toArena(e.data).getRoot(client.Client);
         var root = allocator.initRoot(server.Server);
