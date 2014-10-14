@@ -20,6 +20,7 @@ define([ "../far", "./structure" ], function(far, structure) {
         pointer.segment[pointer.position + 1] = offset >>> 6;
         pointer.segment[pointer.position + 2] = offset >>> 14;
         pointer.segment[pointer.position + 3] = offset >>> 22;
+for (var k in meta) console.log(''+k+' : '+meta[k]);
         if (meta.size === 7) {
             console.log('PEEP');
             composite(pointer, blob, meta, length);
