@@ -14,9 +14,7 @@ requirejs(['capnp-js/packet', 'capnp-js/builder/Allocator', 'capnp/client.capnp.
     onmessage = function (e) {
         var message = packet.toArena(e.data).getRoot(client.Client);
         var root = allocator.initRoot(server.Server);
-console.log('peep1');
         var m = root.initMessages(1).get(0);
-console.log('peep2');
         m.setSource(message.getSource().getUser());
         m.setValue(message.getValue());
         postMessage(packet.fromStruct(m));

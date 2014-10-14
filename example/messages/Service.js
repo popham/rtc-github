@@ -21,7 +21,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             throw new Error('Host user information unavailable');
         }
         var root = allocator.initRoot(client.Client);
+        console.log(root.getSource().which());
         root.getSource().setUser(user);
+        console.log(root.getSource().which());
         root.setMessage(message);
         this._worker.postMessage(packet.fromStruct(root));
     };

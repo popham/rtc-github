@@ -1,0 +1,8 @@
+Redis users need user id's (incrementing counter)
+Node server augments signal message with that user id
+
+Ascend the scope ids to the parent file
+
+0x95570979dae93deb USER? (from Session.initUser)
+0x95570979dae93deb ok
+
