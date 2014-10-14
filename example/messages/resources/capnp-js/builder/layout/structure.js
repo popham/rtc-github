@@ -1,13 +1,17 @@
 define([ "../far" ], function(far) {
     var wordCounts = function(pointer, data, pointers) {
-console.log("WC");
-console.log(data);
-console.log(pointers);
-console.log("END");
         pointer.segment[pointer.position + 4] = data;
         pointer.segment[pointer.position + 5] = data >>> 8;
         pointer.segment[pointer.position + 6] = pointers;
         pointer.segment[pointer.position + 7] = pointers >>> 8;
+console.log("WC");
+console.log(data);
+console.log(pointers);
+console.log(pointer.segment[pointer.position+4]);
+console.log(pointer.segment[pointer.position+5);
+console.log(pointer.segment[pointer.position+6]);
+console.log(pointer.segment[pointer.position+7]);
+console.log("END");
     };
     var intrasegment = function(pointer, blob, meta) {
         // Non-bitshift to avoid possible sign-bit truncation.
