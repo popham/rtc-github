@@ -4,14 +4,6 @@ define([ "../far" ], function(far) {
         pointer.segment[pointer.position + 5] = data >>> 8;
         pointer.segment[pointer.position + 6] = pointers;
         pointer.segment[pointer.position + 7] = pointers >>> 8;
-console.log("WC");
-console.log(data);
-console.log(pointers);
-console.log(pointer.segment[pointer.position+4]);
-console.log(pointer.segment[pointer.position+5]);
-console.log(pointer.segment[pointer.position+6]);
-console.log(pointer.segment[pointer.position+7]);
-console.log("END");
     };
     var intrasegment = function(pointer, blob, meta) {
         // Non-bitshift to avoid possible sign-bit truncation.
@@ -21,9 +13,6 @@ console.log("END");
         pointer.segment[pointer.position + 1] = offset >>> 6;
         pointer.segment[pointer.position + 2] = offset >>> 14;
         pointer.segment[pointer.position + 3] = offset >>> 22;
-console.log("PREALLOCATED");
-for (var k in meta) console.log(''+k+' : '+meta[k]);
-console.log("END");
         wordCounts(pointer, meta.dataBytes >>> 3, meta.pointersBytes >>> 3);
     };
     var preallocated = function(pointer, blob, meta) {
