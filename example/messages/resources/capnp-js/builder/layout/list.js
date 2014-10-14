@@ -21,6 +21,7 @@ define([ "../far", "./structure" ], function(far, structure) {
         pointer.segment[pointer.position + 2] = offset >>> 14;
         pointer.segment[pointer.position + 3] = offset >>> 22;
         if (meta.size === 7) {
+            console.log('PEEP');
             composite(pointer, blob, meta, length);
         } else {
             lo(pointer, meta.layout, length);
@@ -28,7 +29,6 @@ define([ "../far", "./structure" ], function(far, structure) {
     };
     var preallocated = function(pointer, blob, meta, length) {
         if (pointer.segment === blob.segment) {
-            console.log("PEEP");
             intrasegment(pointer, blob, meta, length);
         } else {
             var land = {
