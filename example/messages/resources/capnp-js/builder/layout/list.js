@@ -28,6 +28,7 @@ define([ "../far", "./structure" ], function(far, structure) {
     };
     var preallocated = function(pointer, blob, meta, length) {
         if (pointer.segment === blob.segment) {
+            console.log("PEEP");
             intrasegment(pointer, blob, meta, length);
         } else {
             var land = {
