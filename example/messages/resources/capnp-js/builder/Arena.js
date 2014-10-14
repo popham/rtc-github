@@ -23,11 +23,6 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
         var root = this._root();
         var blob = this._preallocate(root.segment, ctSize);
         builder.preallocated(root, blob, Structure._CT);
-console.log("INIT ROOT");
-var s = ''
-for (var i=0; i<root.segment._position; ++i) s += ' '+root.segment[i];
-console.log(s);
-console.log('END');
         return Structure._deref(this, root);
     };
     Builder.prototype.initOrphan = function(Type) {

@@ -25,6 +25,12 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
     };
     statics.install(Text);
     Text._set = function(arena, pointer, value) {
+var ss = arena._segments[0];
+console.log("TEXT");
+var s = ''
+for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
+console.log(s);
+console.log('END');
         var source, length;
         if (t === value._Type) {
             source = {
@@ -42,9 +48,24 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
             throw new TypeError();
         }
         var blob = arena._preallocate(pointer.segment, length + 1);
+console.log("TEXT");
+var s = ''
+for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
+console.log(s);
+console.log('END');
         arena._write(source, length, blob);
+console.log("TEXT");
+var s = ''
+for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
+console.log(s);
+console.log('END');
         blob.segment[length] = 0;
         layout.preallocated(pointer, blob, ct, length + 1);
+console.log("TEXT");
+var s = ''
+for (var i=0; i<ss._position; ++i) s += ' '+ss[i];
+console.log(s);
+console.log('END');
     };
     Text.prototype = {
         _TYPE: t,
