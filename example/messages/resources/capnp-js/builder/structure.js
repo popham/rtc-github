@@ -30,6 +30,7 @@ define([ "../reader/layout/structure", "../reader/methods", "./layout/structure"
             // Upgrade the blob if the pointer derived from an old version.
             var rt = instance._rt();
             if (rt.dataBytes < ct.dataBytes || rt.pointersBytes < ct.pointersBytes) {
+console.log('UPGRADING!');
                 upgrade.structure(instance._arena, pointer, ct);
                 return new Structure(arena, reader.unsafe(arena, pointer), false);
             }
