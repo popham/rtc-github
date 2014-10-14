@@ -87,7 +87,7 @@ define([ "../reader/layout/any", "../reader/isNull" ], function(any, isNull) {
         }
         zeroFarLanding(arena, pointer);
         arena._zero(pointer, 8);
-        return target;
+        return pointer;
     };
     return {
         pointer: zero,

@@ -44,7 +44,7 @@ define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init",
             var pointers = position + this._dataBytes;
             return new Builder(this._arena, {
                 meta: 0,
-                segmendt: this._segment,
+                segment: this._segment,
                 dataSection: position,
                 pointersSection: pointers,
                 end: pointers + this._pointersBytes
