@@ -1,4 +1,4 @@
-define([ "../reader/layout/index", "../reader/isNull", "../reader/far", "./far", "./layout/index", "./shiftOffset" ], function(reader, isNull, farReader, farBuilder, builder, shiftOffset) {
+define([ "../reader/layout/index", "../reader/isNull", "../reader/far", "../reader/list/meta", "./far", "./layout/index", "./shiftOffset" ], function(reader, isNull, farReader, meta, farBuilder, builder, shiftOffset) {
     /*
      * Update a far pointer with its list or structure pointer if it is local to
      * `blob`.
@@ -142,22 +142,20 @@ define([ "../reader/layout/index", "../reader/isNull", "../reader/far", "./far",
      */
     var list = function(arena, pointer, ct) {
         var layout = reader.list.unsafe(arena, pointer);
-        var meta = {
-            dataBytes: ct.dataBytes,
-            pointersBytes: ct.pointersBytes,
-            size: ct.size
-        };
-        meta.length = layout.length;
+        var rt = meta(layout);
         var blob, begin;
         var bytes = ct.dataBytes + ct.pointersBytes;
-        if (ct.size === 7) {
+        if (ct.layout === 7) {
             blob = arena._preallocate(pointer.segment, 8 + layout.length * bytes);
             begin = blob.position + 8;
         } else {
             blob = arena._preallocate(pointer.segment, layout.length * bytes);
             begin = blob.position;
         }
-        // Shift of the list's first pointer section.
+        /*
+         * Shift of the list's first pointer section (only useful for local
+         * allocations).
+         */
         var delta = begin - layout.begin;
         // Misalignment between compile-time structures and run-time structures.
         var mis = bytes - rt.dataBytes - rt.pointersBytes;
@@ -169,13 +167,18 @@ define([ "../reader/layout/index", "../reader/isNull", "../reader/far", "./far",
             segment: blob.segment,
             position: begin
         };
+        var slop = {
+            data: ct.dataBytes - rt.dataBytes,
+            pointers: ct.pointersBytes - rt.pointersBytes
+        };
         for (var i = 0; i < layout.length; ++i) {
             // Verbatim copy the data section.
             arena._write(iSource, rt.dataBytes, iTarget);
             // Update iterator positions.
-            iSource.position += ct.dataBytes;
+            iSource.position += rt.dataBytes;
             iTarget.position += rt.dataBytes;
-            if (ct.encoding >= 6) {
+            iTarget.position += slop.data;
+            if (rt.encoding >= 6) {
                 if (layout.segment === blob.segment) {
                     intrasegmentMovePointers(iTarget, rt.pointersBytes >>> 3, delta + i * mis);
                 } else {
@@ -183,9 +186,9 @@ define([ "../reader/layout/index", "../reader/isNull", "../reader/far", "./far",
                 }
             }
             // Realign the target iterator.
-            iTarget.position += ct.pointersBytes - rt.pointersBytes;
+            iTarget.position += slop.pointers;
         }
-        builder.list.preallocated(pointer, blob, meta);
+        builder.list.preallocated(pointer, blob, ct, layout.length);
     };
     return {
         list: list,

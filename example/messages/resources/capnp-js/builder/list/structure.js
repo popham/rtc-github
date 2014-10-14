@@ -21,32 +21,12 @@ define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init",
         var stride = Structs._CT.dataBytes + Structs._CT.pointersBytes;
         if (Structs._CT.layout === 7) {
             Structs._init = function(arena, pointer, length) {
-                console.log('LENGTH');
-                console.log(length);
-                console.log('PRE');
-                console.log(pointer.segment[pointer.position]);
-                console.log(pointer.segment[pointer.position+1]);
-                console.log(pointer.segment[pointer.position+2]);
-                console.log(pointer.segment[pointer.position+3]);
-                console.log(pointer.segment[pointer.position+4]);
-                console.log(pointer.segment[pointer.position+5]);
-                console.log(pointer.segment[pointer.position+6]);
-                console.log(pointer.segment[pointer.position+7]);
                 var blob = arena._preallocate(pointer.segment, 8 + length * stride);
                 list.preallocated(pointer, blob, Structs._CT, length);
-                console.log('POST');
-                console.log(pointer.segment[pointer.position]);
-                console.log(pointer.segment[pointer.position+1]);
-                console.log(pointer.segment[pointer.position+2]);
-                console.log(pointer.segment[pointer.position+3]);
-                console.log(pointer.segment[pointer.position+4]);
-                console.log(pointer.segment[pointer.position+5]);
-                console.log(pointer.segment[pointer.position+6]);
-                console.log(pointer.segment[pointer.position+7]);
                 return Structs._deref(arena, pointer);
             };
         } else if (Structs._CT.layout === 1) {
-            throw new Error("Single bit structures are not suported");
+            throw new Error("Single bit structures are not supported");
         } else {
             Structs._init = init(Structs);
         }
@@ -57,9 +37,6 @@ define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init",
             _layout: methods.layout
         };
         Structs.prototype.get = function(index) {
-console.log('GET');
-console.log(index);
-console.log(this._length);
             if (index < 0 || this._length <= index) {
                 throw new RangeError();
             }
