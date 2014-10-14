@@ -33,7 +33,6 @@ define([ "../reader/layout/structure", "../reader/methods", "./layout/structure"
                 upgrade.structure(instance._arena, pointer, ct);
                 return new Structure(arena, reader.unsafe(arena, pointer), false);
             }
-console.log('PEEP');
             return instance;
         };
         Structure._init = function(arena, pointer) {
