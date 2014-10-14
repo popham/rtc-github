@@ -20,8 +20,9 @@ requirejs(['capnp-js/packet', 'capnp-js/builder/Allocator', 'capnp/client.capnp.
         var root = allocator.initRoot(server.Server);
         var m = root.initMessages(1).get(0);
         console.log('WORKER');
-        console.log(message._dataBytes);
-        console.log(message._pointersBytes);
+        console.log(message._dataSection);
+        console.log(message._pointersSection);
+        console.log(message._end);
         console.log(message.getSource().which());
         m.setSource(message.getSource().getUser());
         m.setValue(message.getValue());
