@@ -2,8 +2,7 @@ importScripts('resources/requirejs/require.js');
 requirejs.config({
     baseUrl : 'resources',
     paths : {
-        'capnp' : 'capnp',
-        'rtc-github-protocol' : 'rtc-github-protocol'
+        'capnp' : '../capnp'
     }
 });
 
