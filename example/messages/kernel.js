@@ -1,6 +1,6 @@
 importScripts('resources/requirejs/require.js');
 requirejs.config({
-    baseUrl : '.',
+    baseUrl : '',
     paths : {
         'capnp-js' : 'resources/capnp-js',
         'capnp' : 'capnp'
