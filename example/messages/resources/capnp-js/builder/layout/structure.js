@@ -1,5 +1,9 @@
 define([ "../far" ], function(far) {
     var wordCounts = function(pointer, data, pointers) {
+console.log("WC");
+console.log(data);
+console.log(pointers);
+console.log("END");
         pointer.segment[pointer.position + 4] = data;
         pointer.segment[pointer.position + 5] = data >>> 8;
         pointer.segment[pointer.position + 6] = pointers;
