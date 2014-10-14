@@ -23,6 +23,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         var root = allocator.initRoot(client.Client);
         root.getSource().setUser(user);
         root.setMessage(message);
+        console.log(message._dataSection);
+        console.log(message._pointersSection);
+        console.log(message._end);
         this._worker.postMessage(packet.fromStruct(root));
     };
 
