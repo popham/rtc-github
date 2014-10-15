@@ -45,13 +45,15 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var onMessage = function (message) {
-            var name = message.getSource().getName().asString();
-            var m = message.getValue().asString().trim();
-            if (m !== '') {
-                var p = document.createElement('p');
-                p.innerHTML = '<p><span>'+name+'</span><br>'+m+'</p>';
-                history.appendChild(p);
-            }
+            message.getMessages().forEach(function (message) {
+                var name = message.getSource().getName().asString();
+                var m = message.getValue().asString().trim();
+                if (m !== '') {
+                    var p = document.createElement('p');
+                    p.innerHTML = '<p><span>'+name+'</span><br>'+m+'</p>';
+                    history.appendChild(p);
+                }
+            });
 
             return false;
         };
