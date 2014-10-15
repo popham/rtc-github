@@ -66,6 +66,8 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                 options += user.getName().asString();
                 options += '</option>';
             });
+
+            hosts.innerHTML = options;
         };
 
         var uiReset = function () {
