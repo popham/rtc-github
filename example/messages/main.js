@@ -6,6 +6,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var auth = document.getElementById('auth');
 
         // Control
+        var currentHost = document.getElementById('currentHost');
         var hosts = document.getElementById('hosts');
         var offer = document.getElementById('offer');
         var accept = document.getElementById('accept');
@@ -18,8 +19,27 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var clear = document.getElementById('clear');
 
         var selectedHost = function () {
-            var i = hosts.selectedIndex;
-            return hosts.item(i).value;
+            var host = hosts.item(hosts.selectedIndex);
+            return {
+                id : host.value,
+                name : host.text
+            };
+        };
+
+        var selectHost = function (choice) {
+            if (choice) {
+                currentHost.innerHTML = choice.getName().asString();
+            } else {
+                currentHost.innerHTML = selectedHost().name;
+            }
+            currentHost.hidden = false;
+            hosts.hidden = true;
+        };
+
+        var unselectHost = function () {
+            currentHost.innerHTML = "";
+            currentHost.hidden = true;
+            hosts.hidden = false;
         };
 
         var printMessage = function (name, message) {
@@ -71,6 +91,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var uiReset = function () {
+            unselectHost();
             hosts.disabled = true;
             offer.disabled = true;
             accept.disabled = true;
@@ -109,7 +130,10 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var service = null;
 
         var logOut = [function (done) {
-            if (signal) signal.kill();
+            if (signal) {
+                signal.hostsUpdated.removeAll();
+                signal.kill();
+            }
             signal = null;
             uiAnonymous();
             done();
@@ -144,15 +168,17 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             send.onclick = onSend(local);
                             clear.onclick = onClear;
                             uiHost();
+                            selectHost(service.getOwner());
                             done()
                         });
                     }, 'host'],
                     accept : [function (done) {
-                        client = new Client(selectedHost(), signal);
+                        client = new Client(selectedHost().id, signal);
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
                         uiGuest();
+                        selectHost();
                         done()
                     }, 'guest']
                 },
