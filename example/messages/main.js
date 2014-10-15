@@ -68,48 +68,37 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var uiReset = function () {
+            hosts.disabled = true;
+            offer.disabled = true;
+            accept.disabled = true;
+            quit.disabled = true;
+            message.disabled = true;
+            message.innerHTML = "";
+            send.disabled = true;
+            clear.disabled = true;
+        };
+        var uiAnonymous = function () {
+            uiReset();
+        };
+        var uiAuthenticated = function () {
+            uiReset();
             hosts.disabled = false;
             offer.disabled = false;
             accept.disabled = false;
+        };
+        var uiHost = function () {
+            uiReset();
             quit.disabled = false;
-            history.disabled = false;
             message.disabled = false;
             send.disabled = false;
             clear.disabled = false;
         };
-        var uiAnonymous = function () {
-            uiReset();
-            hosts.disabled = true;
-            offer.disabled = true;
-            accept.disabled = true;
-            quit.disabled = true;
-            send.disabled = true;
-            clear.disabled = true;
-
-            history.innerHTML = "";
-            message.disabled = true;
-            message.value = "";
-        };
-        var uiAuthenticated = function () {
-            uiReset();
-            quit.disabled = true;
-            send.disabled = true;
-            clear.disabled = true;
-
-            history.innerHTML = "";
-            message.disabled = true;
-            message.value = "";
-        };
-        var uiHost = function () {
-            uiReset();
-            hosts.disabled = true;
-            offer.disabled = true;
-            accept.disabled = true;
-        };
         var uiGuest = function () {
             uiReset();
-            offer.disabled = true;
-            accept.disabled = true;
+            quit.disabled = false;
+            message.disabled = false;
+            send.disabled = false;
+            clear.disabled = false;
         };
 
         var signal = null;
