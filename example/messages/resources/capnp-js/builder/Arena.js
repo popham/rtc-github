@@ -149,7 +149,7 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
      * target Datum
      */
     Builder.prototype._write = function(source, length, target) {
-        target.segment.set(source.segment.subarray(source.position, length), target.position);
+        target.segment.set(source.segment.subarray(source.position, source.position + length), target.position);
     };
     Builder.prototype._zero = function(pointer, length) {
         this.__zero(pointer.segment, pointer.position, length);
