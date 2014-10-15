@@ -24,7 +24,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var printMessage = function (name, message) {
             var p = document.createElement('p');
-            p.innerHTML = '<p><span class="name">'+name+'</span><span class="message">'+m+'</span></p>';
+            p.innerHTML = '<p><span class="name">'+name+'</span><span class="message">'+message+'</span></p>';
             history.insertBefore(p, history.firstChild);
         };
 
