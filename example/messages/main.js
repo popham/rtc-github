@@ -62,7 +62,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var onHostsUpdate = function (users) {
             var options = '';
             users.forEach(function (user) {
-                options += '<option value="'+user.getUid()+'">';
+                options += '<option value="'+user.getId()+'">';
                 options += user.getName().asString();
                 options += '</option>';
             });
