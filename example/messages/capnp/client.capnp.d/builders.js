@@ -43,12 +43,12 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return Builder_user._init(this._arena, pointer, this._depth + 1);
             };
             Structure.prototype.setUser = function(value) {
+                this._setWhich(1);
                 var pointer = {
                     segment: this._segment,
                     position: this._pointersSection + 0
                 };
                 Builder_user._set(this._arena, pointer, value);
-                this._setWhich(1);
             };
             Structure.prototype.adoptUser = function(value) {
                 if (Builder_user._TYPE !== value._TYPE) {
