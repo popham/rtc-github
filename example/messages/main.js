@@ -37,7 +37,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     client.send(m);
                     var p = document.createElement('p');
                     p.innerHTML = m;
-                    history.appendChild(p);
+                    history.insertBefore(p, history.firstChild);
                 }
 
                 return false;
