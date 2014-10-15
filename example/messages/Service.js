@@ -4,14 +4,14 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     var allocator = new Allocator();
 
     var LocalClient = function (service, worker) {
-        this.messaged = new signals.Signal();
+        var messaged = this.messaged = new signals.Signal();
 
         this._service = service;
         this._worker = worker;
 
         worker.onmessage = function (e) {
             var root = packet.toArena(e.data).getRoot(server.Server);
-            this.messaged.dispatch(root);
+            messaged.dispatch(root);
         };
     };
 
