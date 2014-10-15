@@ -22,6 +22,12 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             return hosts.item(i).value;
         };
 
+        var printMessage = function (name, message) {
+            var p = document.createElement('p');
+            p.innerHTML = '<p><span class="name">'+name+'</span><span class="message">'+m+'</span></p>';
+            history.insertBefore(p, history.firstChild);
+        };
+
         var onClear = function (event) {
             if (message.value !== '') {
                 message.value = '';
@@ -35,9 +41,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                 var m = message.value.trim();
                 if (m !== '') {
                     client.send(m);
-                    var p = document.createElement('p');
-                    p.innerHTML = m;
-                    history.insertBefore(p, history.firstChild);
+                    printMessage('Me', m);
                 }
 
                 return false;
@@ -46,13 +50,10 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var onMessage = function (message) {
             message.getMessages().forEach(function (message) {
-                var name = message.getSource().getName().asString();
-                var m = message.getValue().asString().trim();
-                if (m !== '') {
-                    var p = document.createElement('p');
-                    p.innerHTML = '<p><span>'+name+'</span><br>'+m+'</p>';
-                    history.appendChild(p);
-                }
+                printMessage(
+                    message.getSource().getName().asString(),
+                    message.getValue().asString().trim()
+                );
             });
 
             return false;
