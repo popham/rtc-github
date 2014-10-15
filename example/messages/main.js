@@ -112,7 +112,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             done();
         }, 'anonymous'];
 
-        uiAnonymous();
         var state = new StateMachine(
             'anonymous',
             {
