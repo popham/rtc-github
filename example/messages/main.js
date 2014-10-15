@@ -63,6 +63,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     client.send(m);
                     printMessage('Me', m);
                 }
+                message.value = '';
 
                 return false;
             };
