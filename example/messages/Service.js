@@ -11,7 +11,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
         worker.onmessage = function (e) {
             console.log('LocalClient receiving data...')
-            console.log(e);
             var root = packet.toArena(e.data).getRoot(server.Server);
             messaged.dispatch(root);
         };
@@ -25,8 +24,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         var root = allocator.initRoot(client.Client);
         root.getSource().setUser(user);
         root.setMessage(message);
-        console.log('LocalClient sending message to worker...');
-        console.log(root);
+        console.log('LocalClient sending message to worker.');
         this._worker.postMessage(packet.fromStruct(root));
     };
 
@@ -61,14 +59,12 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 var arena = Allocator.constCast(packet.toArena(e.data));
                 var root = arena.getRoot(client.Client);
                 root.getSource().setUser(this.user);
-                console.log('RTC channel sending message to worker...');
-                console.log(root);
+                console.log('RTC channel sending message to worker.');
                 this.worker.postMessage(packet.fromStruct(root));
             }.bind(this);
 
             this.worker.onmessage = function (e) {
-                console.log('RTC channel sending message to client...');
-                console.log(e.data)
+                console.log('RTC channel sending message to client.');
 
                 // Forward server messages verbatim.
                 this.channel.send(e.data);
