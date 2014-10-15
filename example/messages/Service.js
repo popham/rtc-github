@@ -137,6 +137,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 throw new Error('Service only accepts ice candidates or offers');
             }
         }.bind(this));
+
+        signal.service(true);
     };
 
     Service.prototype.getOwner = function () {
@@ -153,6 +155,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this._hostUser = null;
         this._remoteClients = null;
         this._worker = null;
+        this._signal.service(false);
         this._signal.peered.remove(this._onPeered);
         this._signal = null;
     };
