@@ -1,4 +1,4 @@
-define([ "../reader/layout/structure", "../reader/methods", "./layout/structure", "./upgrade" ], function(reader, methods, builder, upgrade) {
+define([ "../reader/layout/structure", "../reader/methods", "./layout/structure", "./copy/deep", "./upgrade" ], function(reader, methods, builder, copy, upgrade) {
     return function(Reader) {
         var t = Reader._TYPE;
         var ct = Reader._CT;
@@ -55,14 +55,7 @@ define([ "../reader/layout/structure", "../reader/methods", "./layout/structure"
             if (t !== value._TYPE) {
                 throw new TypeError();
             }
-            var source = {
-                segment: value._segment,
-                position: value._dataSection
-            };
-            var size = value._end - value._dataSection;
-            var blob = arena._preallocate(pointer.segment, size);
-            arena._write(source, size, blob);
-            builder.preallocated(pointer, blob, value._rt());
+            copy.setStructurePointer(value._arena, value._layout(), arena, pointer);
         };
         Structure.prototype = {
             _TYPE: t,

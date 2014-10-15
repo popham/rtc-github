@@ -1,4 +1,4 @@
-define([ "../../reader/list/Bool", "../../reader/layout/list", "../layout/list", "./statics", "./methods", "../primitives" ], function(Reader, reader, builder, statics, methods, primitives) {
+define([ "../../reader/list/Bool", "../../reader/layout/list", "../copy/deep", "../layout/list", "./statics", "./methods", "../primitives" ], function(Reader, reader, copy, builder, statics, methods, primitives) {
     var t = Reader._TYPE;
     var ct = Reader._CT;
     var Bools = function(arena, layout, isDisowned) {
@@ -37,24 +37,7 @@ define([ "../../reader/list/Bool", "../../reader/layout/list", "../layout/list",
         if (!this._TYPE.equiv(value._TYPE)) {
             throw new TypeError();
         }
-        var size;
-        var source = {
-            segment: value._segment,
-            position: value._begin
-        };
-        var rt = value._rt();
-        if (rt.layout === 1) {
-            size = value._length >>> 3;
-            if (value._length & 7) size += 1;
-        } else if (rt.layout === 7) {
-            size = 8 + value._length * (rt.dataBytes + rt.pointersBytes);
-            source.position -= 8;
-        } else {
-            size = value._length * (rt.dataBytes + rt.pointersBytes);
-        }
-        var blob = arena._preallocate(value._segment, size);
-        arena._write(source, size, blob);
-        builder.preallocated(pointer, blob, rt, value._length);
+        copy.setListPointer(value._arena, value._layout(), arena, pointer);
     };
     Bools.prototype = {
         _TYPE: t,
