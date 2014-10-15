@@ -219,6 +219,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         offer.onclick = function () { state.trigger('offer'); };
         accept.onclick = function () { state.trigger('accept'); };
-        quit.onclick = function () { state.trigger('logOut'); };
+        quit.onclick = function () { state.trigger('quit'); };
     });
 });
