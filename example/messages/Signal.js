@@ -57,7 +57,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
     Signal.prototype.service = function (isOffering) {
         var request = allocator.initRoot(client.Client);
         request.initService();
-        request.getService().setOffer(isOffering);
+        request.getService().setIsOffering(isOffering);
         this._send(request);
     };
 
