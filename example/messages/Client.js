@@ -6,9 +6,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     var allocator = new Allocator();
 
     var DataChannelServer = function (targetUserId, peerSignaller) {
-        this.messaged = new signals.Signal();
+        var messaged = this.messaged = new signals.Signal();
         this.peer = peerSignaller;
-        this.channel = null;
+        this._channel = null;
         var connection = this.connection = new RTCPeerConnection(
             {
                 iceServers : [
@@ -30,22 +30,19 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
         this._channel = connection.createDataChannel('chat');
 
-        connection.ondatachannel = function (e) {
-            var messaged = this.messaged;
-            this.channel = e.channel;
+        this._channel.onopen = function (e) {
+            connection.createOffer(function (sdp) {
+                peerSignaller.offer(targetUserId, sdp)
+            });
+        };
 
-            this.channel.onmessage = function (e) {
-                var arena = packet.toArena(e.data);
-                var root = arena.getRoot(server.Server);
-                root.getMessages().forEach(function (message) {
-                    messaged.dispatch(message);
-                });
-            };
-        }.bind(this);
-
-        connection.createOffer(function (sdp) {
-            peerSignaller.offer(targetUserId, sdp)
-        });
+        this._channel.onmessage = function (e) {
+            var arena = packet.toArena(e.data);
+            var root = arena.getRoot(server.Server);
+            root.getMessages().forEach(function (message) {
+                messaged.dispatch(message);
+            });
+        };
     };
 
     DataChannelServer.prototype.finalize = function (answer) {
