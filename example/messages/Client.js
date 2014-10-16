@@ -20,9 +20,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         );
 
         connection.onicecandidate = function (e) {
-            if (e.candidate) {
-                peerSignaller.iceCandidate(targetUserId, e.candidate);
-            }
+            peerSignaller.offerIce(targetUserId, e.candidate);
         };
 
         this._channel = connection.createDataChannel('chat', {reliable : false});

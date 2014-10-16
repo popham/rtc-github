@@ -42,21 +42,21 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 answer.setSdp(description.sdp);
                 this._send(packet.fromStruct(root));
             }.bind(this),
-            iceCandidate : function (uid, e) {
+            offerIce : function (uid, ice) {
                 var arena = allocator.createArena();
 
-                var ice = arena.initOrphan(peer.Peer.Ice);
-                switch (e.sdpMid) {
-                case 'audio': ice.setSdpMId(peer.MediaIdentifier.AUDIO); break;
-                case 'video': ice.setSdpMId(peer.MediaIdentifier.VIDEO); break;
-                case 'data': ice.setSdpMId(peer.MediaIdentifier.DATA); break;
+                var i = arena.initOrphan(peer.Peer.Ice);
+                switch (ice.sdpMid) {
+                case 'audio': i.setSdpMId(peer.MediaIdentifier.AUDIO); break;
+                case 'video': i.setSdpMId(peer.MediaIdentifier.VIDEO); break;
+                case 'data': i.setSdpMId(peer.MediaIdentifier.DATA); break;
                 default: return; // Noop on unrecognized identifier.
                 }
 
                 var root = arena.initRoot(client.Client);
                 var peer = root.initPeer();
                 peer.getTarget().setUserId(uid);
-                peer.adoptIce(ice);
+                peer.adoptIce(i);
 
                 this._send(packet.fromStruct(root));
             }.bind(this)
