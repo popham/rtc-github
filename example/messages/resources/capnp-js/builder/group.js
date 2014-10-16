@@ -14,6 +14,15 @@ define([ "./methods" ], function(methods) {
             _rt: methods.rt,
             _layout: methods.layout
         };
+        Group.prototype._maskData = function(position, mask) {
+            this._segment[this._dataSection + position] &= mask;
+        };
+        Group.prototype._zeroData = function(position, length) {
+            this._arena._zero({
+                segment: this._segment,
+                position: position
+            }, length);
+        };
         return Group;
     };
 });
