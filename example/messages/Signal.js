@@ -69,9 +69,11 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
         this.peered.removeAll();
         this.closed.removeAll();
 
-        this._socket.onclose = null;
-        this._socket.close();
-        this._socket = null;
+        if (this._socket) {
+            this._socket.onclose = null;
+            this._socket.close();
+            this._socket = null;
+        }
 
         this._deferredConnection.reject('Signal killed');
     };
