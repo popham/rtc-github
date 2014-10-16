@@ -91,7 +91,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     Client.prototype.kill = function () {
-        this._signal.remove(this._onPeered);
+        this._signal.peered.remove(this._onPeered);
 
         this._server = null;
         this.messaged = null;
