@@ -32,7 +32,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 p.getTarget().setUserId(uid);
                 var offer = p.initOffer();
                 offer.setSdp(description.sdp);
-                this._send(packet.fromStruct(root));
+                this._send(root);
             }.bind(this),
             answer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
@@ -40,7 +40,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 p.getTarget().setUserId(uid);
                 var answer = p.initAnswer();
                 answer.setSdp(description.sdp);
-                this._send(packet.fromStruct(root));
+                this._send(root);
             }.bind(this),
             offerIce : function (uid, ice) {
                 var arena = allocator.createArena();
@@ -58,7 +58,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 p.getTarget().setUserId(uid);
                 p.adoptIce(i);
 
-                this._send(packet.fromStruct(root));
+                this._send(root);
             }.bind(this)
         };
     };
