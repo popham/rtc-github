@@ -44,7 +44,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         connection.createOffer(
             function (sdp) {
                 connection.setLocalDescription(
-                    sdp,
+                    new RTCSessionDescription(sdp),
                     function () {
                         peerSignaller.offer(targetUserId, sdp);
                     },
