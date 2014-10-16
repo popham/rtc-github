@@ -31,9 +31,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this._channel = connection.createDataChannel('chat');
 
         this._channel.onopen = function (e) {
-            connection.createOffer(function (sdp) {
-                peerSignaller.offer(targetUserId, sdp)
-            });
+            console.log('peep');
         };
 
         this._channel.onmessage = function (e) {
@@ -43,6 +41,26 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 messaged.dispatch(message);
             });
         };
+
+        this._channel.onerror = function (e) {
+            console.log(e);
+        };
+
+        this._channel.onclose = function (e) {
+            console.log(e);
+        };
+
+        connection.createOffer(function (description) {
+            connection.setLocalDescription(
+                description,
+                function () {
+                    peerSignaller.offer(targetUserId, connection.localDescription)
+                },
+                function (e) {
+                    console.log(e);
+                }
+            );
+        });
     };
 
     DataChannelServer.prototype.finalize = function (answer) {
