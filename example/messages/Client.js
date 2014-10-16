@@ -68,7 +68,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     var Client = function (targetUserId, signal) {
-        this._server = new DataChannelServer(signal.peer);
+        this._server = new DataChannelServer(targetUserId, signal.peer);
         this.messaged = this._server.messaged;
         this._signal = signal;
 
