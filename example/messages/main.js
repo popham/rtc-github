@@ -172,7 +172,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             priorHost = null;
                             uiHost();
                             selectHost(service.getOwner());
-                            done()
+                            done();
                         });
                     }, 'host'],
                     accept : [function (done) {
@@ -185,7 +185,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         priorHost = selectedHost();
                         uiGuest();
                         selectHost();
-                        done()
+                        done();
                     }, 'guest']
                 },
                 host : {

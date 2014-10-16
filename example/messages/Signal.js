@@ -26,20 +26,20 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
         this._reconnect();
 
         this.peer = {
-            offer : function (uid, sdp) {
+            offer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
                 var peer = root.initPeer();
                 peer.getTarget().setUserId(uid);
                 var offer = peer.initOffer();
-                offer.setSdp(sdp);
+                offer.setSdp(description.sdp);
                 this._send(root);
             }.bind(this),
-            answer : function (uid, sdp) {
+            answer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
                 var peer = root.initPeer();
                 peer.getTarget().setUserId(uid);
                 var answer = peer.initAnswer();
-                answer.setSdp(sdp);
+                answer.setSdp(description.sdp);
                 this._send(root);
             }.bind(this),
             iceCandidate : function (uid, candidate) {
