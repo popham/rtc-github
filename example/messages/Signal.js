@@ -1,5 +1,5 @@
-define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'rtc-github-protocol/server.capnp.d/readers', 'rtc-github-protocol/client.capnp.d/builders', './settings'], function (
-         when,      signals,            packet,                    Allocator,                       server,                                       client,                      settings) {
+define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'rtc-github-protocol/peer.capnp.d/builders', 'rtc-github-protocol/server.capnp.d/readers', 'rtc-github-protocol/client.capnp.d/builders', './settings'], function (
+         when,      signals,            packet,                    Allocator,                       peer,                                        server,                                       client,                      settings) {
 
     var allocator = new Allocator();
 
@@ -32,7 +32,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 peer.getTarget().setUserId(uid);
                 var offer = peer.initOffer();
                 offer.setSdp(description.sdp);
-                this._send(root);
+                this._send(packet.fromStruct(root));
             }.bind(this),
             answer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
@@ -40,14 +40,25 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 peer.getTarget().setUserId(uid);
                 var answer = peer.initAnswer();
                 answer.setSdp(description.sdp);
-                this._send(root);
+                this._send(packet.fromStruct(root));
             }.bind(this),
-            iceCandidate : function (uid, candidate) {
-                var root = allocator.initRoot(client.Client);
+            iceCandidate : function (uid, e) {
+                var arena = allocator.createArena();
+
+                var ice = arena.initOrphan(peer.Peer.Ice);
+                switch (e.sdpMid) {
+                case 'audio': ice.setSdpMId(peer.MediaIdentifier.AUDIO); break;
+                case 'video': ice.setSdpMId(peer.MediaIdentifier.VIDEO); break;
+                case 'data': ice.setSdpMId(peer.MediaIdentifier.DATA); break;
+                default: return; // Noop on unrecognized identifier.
+                }
+
+                var root = arena.initRoot(client.Client);
                 var peer = root.initPeer();
                 peer.getTarget().setUserId(uid);
-                peer.setIceCandidate(candidate);
-                this._send(root);
+                peer.adoptIce(ice);
+
+                this._send(packet.fromStruct(root));
             }.bind(this)
         };
     };
