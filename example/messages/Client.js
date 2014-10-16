@@ -43,7 +43,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             };
         }.bind(this);
 */
-        this._channel.createOffer(function (sdp) {
+        connection.createOffer(function (sdp) {
             peerSignaller.offer(targetUserId, sdp)
         });
     };
