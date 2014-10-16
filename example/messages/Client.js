@@ -41,18 +41,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             };
         }.bind(this);
 
-        connection.createOffer(
-            function (sdp) {
-                connection.setLocalDescription(
-                    new RTCSessionDescription(sdp),
-                    function () {
-                        peerSignaller.offer(targetUserId, sdp);
-                    },
-                    error
-                );
-            },
-            error
-        );
+        connection.createOffer(function (sdp) {
+            peerSignaller.offer(targetUserId, sdp)
+        });
     };
 
     DataChannelServer.prototype.finalize = function (answer) {
