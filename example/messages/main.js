@@ -98,7 +98,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             accept.disabled = true;
             quit.disabled = true;
             message.disabled = true;
-            message.innerHTML = "";
+            message.value = "";
             send.disabled = true;
             clear.disabled = true;
         };
