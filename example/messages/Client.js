@@ -28,7 +28,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             }
         };
 
-        connection.ondatachannel = function (e) {
+        this._channel = connection.createDataChannel('chat');
+
+/*        connection.ondatachannel = function (e) {
             var messaged = this.messaged;
             this.channel = e.channel;
 
@@ -40,8 +42,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 });
             };
         }.bind(this);
-
-        connection.createOffer(function (sdp) {
+*/
+        this._channel.createOffer(function (sdp) {
             peerSignaller.offer(targetUserId, sdp)
         });
     };
