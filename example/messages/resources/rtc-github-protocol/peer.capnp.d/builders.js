@@ -1,12 +1,80 @@
 define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader/index', './bScope', './readers', '../user.capnp.d/builders'], function(Allocator, builder, reader, scope, readers, file0) {
     var builders = {};
     var allocator = new Allocator();
+    builders.MediaIdentifier = readers.MediaIdentifier;
     builders.Peer = (function() {
         var Structure = scope["0xe5e90b52fd6c402e"];
+        Structure.Ice = (function() {
+            var Structure = scope["0xf2ae185395b2f8ef"];
+            Structure.prototype.getCandidate = function() {
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                };
+                if (reader.isNull(pointer)) {
+                    builder.copy.pointer.deep(this._defaults.candidate, this._arena, pointer);
+                }
+                return builder.Text._deref(this._arena, pointer);
+            };
+            Structure.prototype.setCandidate = function(value) {
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                };
+                builder.Text._set(this._arena, pointer, value);
+            };
+            Structure.prototype.hasCandidate = function() {
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                };
+                return (!reader.isNull(pointer));
+            };
+            Structure.prototype.adoptCandidate = function(value) {
+                builder.Text._adopt(this._arena, {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                }, value);
+            };
+            Structure.prototype.disownCandidate = function() {
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + 0
+                };
+                if (reader.isNull(pointer)) {
+                    return builder.Text._initOrphan(this._arena);
+                } else {
+                    var instance = builder.Text._deref(this._arena, pointer);
+                    this._arena._zero(pointer, 8);
+                    instance._isDisowned = true;
+                    return instance;
+                }
+            };
+            Structure.prototype.getSdpMLineIndex = function() {
+                var position = this._dataSection + 0;
+                return reader.fields.uint16(0, this._segment, position);
+            };
+            Structure.prototype.setSdpMLineIndex = function(value) {
+                builder.fields.uint16(value, 0, this._segment, this._dataSection + 0);
+            };
+            Structure.prototype.getSdpMId = function() {
+                var position = this._dataSection + 2;
+                return reader.fields.uint16(0, this._segment, position);
+            };
+            Structure.prototype.setSdpMId = function(value) {
+                builder.fields.uint16(value, 0, this._segment, this._dataSection + 2);
+            };
+            Structure.prototype._defaults = Structure._READER.prototype._defaults;
+            return Structure;
+        })();
         Structure.prototype.which = function() {
             return reader.primitives.uint16(this._segment, this._dataSection + 8);
         };
         Structure.prototype._setWhich = function(discriminant) {
+            builder.zero.pointer(this._arena, {
+                segment: this._segment,
+                position: this._pointersSection + 8
+            });
             var position = this._dataSection + 8;
             builder.primitives.uint16(discriminant, this._segment, position);
         };
@@ -50,12 +118,12 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return Builder_user._init(this._arena, pointer, this._depth + 1);
             };
             Structure.prototype.setUser = function(value) {
+                this._setWhich(1);
                 var pointer = {
                     segment: this._segment,
                     position: this._pointersSection + 0
                 };
                 Builder_user._set(this._arena, pointer, value);
-                this._setWhich(1);
             };
             Structure.prototype.adoptUser = function(value) {
                 if (Builder_user._TYPE !== value._TYPE) {
@@ -282,12 +350,52 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             this._setWhich(1);
             return new Structure.Group_answer(this);
         };
-        Structure.prototype.isIceCandidate = function() {
+        Structure.prototype.isIce = function() {
             return this.which() === 2;
         };
-        Structure.ICE_CANDIDATE = Structure.prototype.ICE_CANDIDATE = 2;
-        Structure.prototype.getIceCandidate = function() {
-            if (!this.isIceCandidate()) {
+        Structure.ICE = Structure.prototype.ICE = 2;
+        var Builder_ice = scope["0xf2ae185395b2f8ef"];
+        Structure.prototype.initIce = function() {
+            this._setWhich(2);
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 8
+            };
+            return Builder_ice._init(this._arena, pointer, this._depth + 1);
+        };
+        Structure.prototype.setIce = function(value) {
+            this._setWhich(2);
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 8
+            };
+            Builder_ice._set(this._arena, pointer, value);
+        };
+        Structure.prototype.adoptIce = function(value) {
+            if (Builder_ice._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
+            Builder_ice._adopt(this._arena, {
+                segment: this._segment,
+                position: this._pointersSection + 8
+            }, value);
+        };
+        Structure.prototype.disownIce = function() {
+            var pointer = {
+                segment: this._segment,
+                position: this._pointersSection + 8
+            };
+            if (reader.isNull(pointer)) {
+                return Builder_ice._initOrphan(this._arena);
+            } else {
+                var instance = Builder_ice._deref(this._arena, pointer);
+                this._arena._zero(pointer, 8);
+                instance._isDisowned = true;
+                return instance;
+            }
+        };
+        Structure.prototype.getIce = function() {
+            if (!this.isIce()) {
                 throw new Error("Attempted to access an inactive union member");
             }
             var pointer = {
@@ -295,44 +403,16 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 position: this._pointersSection + 8
             };
             if (reader.isNull(pointer)) {
-                builder.copy.pointer.deep(this._defaults.iceCandidate, this._arena, pointer);
+                builder.copy.pointer.deep(this._defaults.ice, this._arena, pointer);
             }
-            return builder.Text._deref(this._arena, pointer);
+            return Builder_ice._deref(this._arena, pointer);
         };
-        Structure.prototype.setIceCandidate = function(value) {
-            this._setWhich(2);
+        Structure.prototype.hasIce = function() {
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 8
             };
-            builder.Text._set(this._arena, pointer, value);
-        };
-        Structure.prototype.hasIceCandidate = function() {
-            var pointer = {
-                segment: this._segment,
-                position: this._pointersSection + 8
-            };
-            return (this.isIceCandidate() && !reader.isNull(pointer));
-        };
-        Structure.prototype.adoptIceCandidate = function(value) {
-            builder.Text._adopt(this._arena, {
-                segment: this._segment,
-                position: this._pointersSection + 8
-            }, value);
-        };
-        Structure.prototype.disownIceCandidate = function() {
-            var pointer = {
-                segment: this._segment,
-                position: this._pointersSection + 8
-            };
-            if (reader.isNull(pointer)) {
-                return builder.Text._initOrphan(this._arena);
-            } else {
-                var instance = builder.Text._deref(this._arena, pointer);
-                this._arena._zero(pointer, 8);
-                instance._isDisowned = true;
-                return instance;
-            }
+            return (this.isIce() && !reader.isNull(pointer));
         };
         Structure.prototype._defaults = Structure._READER.prototype._defaults;
         return Structure;

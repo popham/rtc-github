@@ -3,6 +3,12 @@
 using import "user.capnp".Uid;
 using import "user.capnp".User;
 
+enum MediaIdentifier {
+    data @0;
+    audio @1;
+    video @2;
+}
+
 struct Peer {
     source :union {
         unset @0 :Void;
@@ -19,6 +25,12 @@ struct Peer {
         answer :group {
             sdp @5 :Text;
         }
-        iceCandidate @6 :Text;
+        ice @6 :Ice;
+    }
+
+    struct Ice {
+        candidate @0 :Text;
+        sdpMLineIndex @1 :UInt16;
+        sdpMId @2 :MediaIdentifier;
     }
 }
