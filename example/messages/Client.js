@@ -15,10 +15,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                     { url : 'stun:stun.l.google.com:19302' }
                 ]
             }, {
-                optional : [
-                    { DtlsSrtpKeyAgreement : true },
-                    { RtpDataChannels : true }
-                ]
+                optional : [{ RtpDataChannels : true }]
             }
         );
 
