@@ -21,6 +21,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return builder.Text._deref(this._arena, pointer);
         };
         Structure.prototype.setName = function(value) {
+            if (builder.Text._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
@@ -35,6 +38,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return (!reader.isNull(pointer));
         };
         Structure.prototype.adoptName = function(value) {
+            if (builder.Text._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
             builder.Text._adopt(this._arena, {
                 segment: this._segment,
                 position: this._pointersSection + 0

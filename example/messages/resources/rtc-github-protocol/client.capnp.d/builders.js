@@ -56,6 +56,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return Builder_peer._init(this._arena, pointer, this._depth + 1);
         };
         Structure.prototype.setPeer = function(value) {
+            if (Builder_peer._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
             this._setWhich(1);
             var pointer = {
                 segment: this._segment,
@@ -67,12 +70,16 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             if (Builder_peer._TYPE !== value._TYPE) {
                 throw new TypeError();
             }
+            this._setWhich(1);
             Builder_peer._adopt(this._arena, {
                 segment: this._segment,
                 position: this._pointersSection + 0
             }, value);
         };
         Structure.prototype.disownPeer = function() {
+            if (!this.isPeer()) {
+                throw new Error("Attempted to access an inactive union member");
+            }
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
