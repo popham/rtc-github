@@ -4,14 +4,16 @@
   "description": "",
   "scripts": {
     "clean": "rm -rf capnp/*.capnp.d",
+    "polyfill": "cat adapter.js | uglifyjs -o polyfill.js",
     "capnp": "capnpc -ojs -I ./node_modules/ capnp/*.capnp",
     "build": "npm run rebuild",
-    "rebuild": "npm run clean && npm run capnp"
+    "rebuild": "npm run clean && npm run capnp && npm run polyfill"
   },
   "author": "",
   "devDependencies": {
     "bower": "^1.3.12",
-    "capnp-js-plugin": "0.0.17"
+    "capnp-js-plugin": "0.0.17",
+    "uglifyjs": "^2.3.6"
   },
   "dependencies": {
     "rtc-github-protocol": "git://github.com/popham/rtc-github-protocol"
