@@ -28,17 +28,17 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
         this.peer = {
             offer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
-                var peer = root.initPeer();
-                peer.getTarget().setUserId(uid);
-                var offer = peer.initOffer();
+                var p = root.initPeer();
+                p.getTarget().setUserId(uid);
+                var offer = p.initOffer();
                 offer.setSdp(description.sdp);
                 this._send(packet.fromStruct(root));
             }.bind(this),
             answer : function (uid, description) {
                 var root = allocator.initRoot(client.Client);
-                var peer = root.initPeer();
-                peer.getTarget().setUserId(uid);
-                var answer = peer.initAnswer();
+                var p = root.initPeer();
+                p.getTarget().setUserId(uid);
+                var answer = p.initAnswer();
                 answer.setSdp(description.sdp);
                 this._send(packet.fromStruct(root));
             }.bind(this),
@@ -54,9 +54,9 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 }
 
                 var root = arena.initRoot(client.Client);
-                var peer = root.initPeer();
-                peer.getTarget().setUserId(uid);
-                peer.adoptIce(i);
+                var p = root.initPeer();
+                p.getTarget().setUserId(uid);
+                p.adoptIce(i);
 
                 this._send(packet.fromStruct(root));
             }.bind(this)
