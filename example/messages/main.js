@@ -129,6 +129,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var signal = null;
         var client = null;
         var service = null;
+        var priorHost = null;
 
         var logOut = [function (done) {
             if (signal) {
@@ -174,10 +175,12 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         });
                     }, 'host'],
                     accept : [function (done) {
-                        client = new Client(selectedHost().id, signal);
+                        var hostId = selectedHost().id;
+                        client = new Client(hostId, signal);
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
+                        if (priorHost !== hostId) history.innerHTML = "";
                         uiGuest();
                         selectHost();
                         done()
@@ -190,6 +193,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         service = null;
                         send.onclick = null;
                         clear.onclick = null;
+                        history.innerHTML = "";
                         uiAuthenticated();
                         done();
                     }, 'authenticated']
@@ -201,6 +205,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         client = null;
                         send.onclick = null;
                         clear.onclick = null;
+                        priorHost = selectedHost().id;
                         uiAuthenticated();
                         done();
                     }, 'authenticated']
