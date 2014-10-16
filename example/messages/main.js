@@ -169,6 +169,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             local.messaged.add(onMessage);
                             send.onclick = onSend(local);
                             clear.onclick = onClear;
+                            priorHost = null;
                             uiHost();
                             selectHost(service.getOwner());
                             done()
@@ -181,6 +182,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
                         if (priorHost !== hostId) history.innerHTML = "";
+                        priorHost = selectedHost();
                         uiGuest();
                         selectHost();
                         done()
@@ -205,7 +207,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         client = null;
                         send.onclick = null;
                         clear.onclick = null;
-                        priorHost = selectedHost().id;
                         uiAuthenticated();
                         done();
                     }, 'authenticated']
