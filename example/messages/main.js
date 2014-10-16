@@ -133,7 +133,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var logOut = [function (done) {
             if (signal) {
-                signal.hostsUpdated.removeAll();
+                signal.hostsUpdated.remove(onHostsUpdate);
                 signal.kill();
             }
             signal = null;
