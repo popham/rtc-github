@@ -28,7 +28,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             }
         };
 
-        this._channel = connection.createDataChannel('chat');
+        this._channel = connection.createDataChannel('chat', {reliable : false});
 
         this._channel.onopen = function (e) {
             console.log('peep');
