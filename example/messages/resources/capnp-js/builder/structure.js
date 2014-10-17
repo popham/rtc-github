@@ -66,7 +66,7 @@ define([ "../reader/layout/structure", "../reader/methods", "./layout/structure"
         Structure.prototype._zeroData = function(position, length) {
             this._arena._zero({
                 segment: this._segment,
-                position: position
+                position: this._dataSection + position
             }, length);
         };
         return Structure;
