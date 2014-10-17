@@ -20,10 +20,7 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
     };
     Builder.prototype.initRoot = function(Structure) {
         var ctSize = Structure._CT.dataBytes + Structure._CT.pointersBytes;
-        var root = this._root();
-        var blob = this._preallocate(root.segment, ctSize);
-        builder.preallocated(root, blob, Structure._CT);
-        return Structure._deref(this, root);
+        return Structure._init(this, this._root());
     };
     Builder.prototype.initOrphan = function(Type) {
         /*
@@ -45,31 +42,37 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
                 upgrade.structure(this, root, ct);
             }
         }
+        this._isRooted = true;
         return Structure._deref(this, root);
     };
     Builder.prototype.setRoot = function(reader) {
         if (reader._CT.meta !== 0) throw new Error("Root must be a struct");
         copy.pointer.deep(reader, this, this._root());
+        this._isRooted = true;
     };
     Builder.prototype.adoptRoot = function(orphan) {
         if (orphan._arena !== this) {
-            throw new Error("Cannot adopt the orphans of other arenas");
+            throw new Error("Adopting an orphan from some other arena");
         }
         if (this._isRooted) {
             throw new Error("The arena already has a root.");
         }
         copy.pointer.shallow(orphan, this._root());
+        this._isRooted = true;
     };
     Builder.prototype._root = function() {
-        if (this._isRooted) {
+        var s0 = this._segments[0];
+        if (s0 && s0._position > 0) {
             return {
                 segment: this._segments[0],
                 position: 0
             };
         } else {
-            var p = this._allocate(8);
-            this._isRooted = true;
-            return p;
+            /*
+             * On node, `allocate` zeros the last word, so this is zeroed
+             * already.
+             */
+            return this._allocate(8);
         }
     };
     /*
@@ -155,9 +158,8 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
         this.__zero(pointer.segment, pointer.position, length);
     };
     Builder.prototype._allocateOrphan = function(bytes) {
-        if (this._isRooted) {
-            return this._allocate(bytes);
-        } else {
+        var s0 = this._segments[0];
+        if (s0 && s0._position > 0) return this._allocate(bytes); else {
             // Leave space at head for the root pointer.
             var blob = this._allocate(bytes + 8);
             blob.position += 8;
