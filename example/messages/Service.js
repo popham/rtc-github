@@ -90,11 +90,32 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             sdp : offer.getSdp().asString()
         });
 
+        this.connection.setRemoteDescription(
+            offer,
+            function () {
+                this.connection.createAnswer(
+                    function (sdp) {
+                        this.connection.setLocalDescription(
+                            sdp,
+                            function () {
+                                peer.answer(sdp);
+                            },
+                            console.log
+                        );
+                    },
+                    console.log
+                );
+            },
+            console.log
+        );
+
+/*
         this.connection.setRemoteDescription(offer);
         this.connection.createAnswer(function (description) {
             this.connection.setLocalDescription(description);
             peer.answer(description);
         });
+*/
     };
 
     DataChannelClient.prototype.addIceCandidate = function (candidate) {
