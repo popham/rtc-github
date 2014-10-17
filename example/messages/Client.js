@@ -20,7 +20,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         );
 
         connection.onicecandidate = function (e) {
-            peerSignaller.offerIce(targetUserId, e.candidate);
+            if (e.candidate) {
+                // Chrome fires an ice candidate event without an attached
+                // candidate.
+                peerSignaller.offerIce(targetUserId, e.candidate);
+            }
         };
 
         this._channel = connection.createDataChannel('chat', {reliable : false});
