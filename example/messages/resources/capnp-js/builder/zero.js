@@ -1,4 +1,4 @@
-define([ "../reader/layout/any", "../reader/isNull" ], function(any, isNull) {
+define([ "../reader/layout/any", "../reader/list/meta", "../reader/isNull" ], function(any, meta, isNull) {
     /*
      * Zero a structure's memory, recurring into its pointers.
      *
@@ -36,7 +36,7 @@ define([ "../reader/layout/any", "../reader/isNull" ], function(any, isNull) {
             position: layout.begin + layout.dataBytes
         };
         // Adjust for the list's tag word.
-        if (layout.size === 7) {
+        if (meta(layout).layout === 7) {
             bytes += 8;
             blob.position -= 8;
         }
