@@ -34,12 +34,13 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
                 length: value._length - 1
             };
         } else if (typeof value === "string") {
+            var segment = Text._encode(value);
             return {
                 source: {
-                    segment: Text._encode(value),
+                    segment: segment,
                     position: 0
                 },
-                length: source.segment.length
+                length: segment.length
             };
         } else {
             throw new TypeError();
