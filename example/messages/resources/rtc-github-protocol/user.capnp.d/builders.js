@@ -21,14 +21,12 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return builder.Text._deref(this._arena, pointer);
         };
         Structure.prototype.setName = function(value) {
-            if (builder.Text._TYPE !== value._TYPE) {
-                throw new TypeError();
-            }
+            var params = builder.Text._setParams(value);
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0
             };
-            builder.Text._set(this._arena, pointer, value);
+            builder.Text._set(this._arena, pointer, params);
         };
         Structure.prototype.hasName = function() {
             var pointer = {

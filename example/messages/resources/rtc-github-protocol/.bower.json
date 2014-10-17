@@ -8,11 +8,11 @@
     "amd"
   ],
   "private": true,
-  "_release": "fff129b8a3",
+  "_release": "bf4afcd186",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "fff129b8a3346ea4bf2f7437ece3e0b379695c16"
+    "commit": "bf4afcd186aabf30ae12712f5659f22fba91eb0b"
   },
   "_source": "git://github.com/popham/rtc-github-protocol-amd.git",
   "_target": "*",
