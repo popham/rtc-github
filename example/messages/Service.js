@@ -86,11 +86,14 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this.connection.setRemoteDescription(
             offer,
             function () {
+                console.log('setRemoteD success');
                 this.connection.createAnswer(
                     function (sdp) {
+                        console.log('createAnswer callback');
                         this.connection.setLocalDescription(
                             sdp,
                             function () {
+                                console.log('answering');
                                 peer.answer(sdp);
                             },
                             console.log
