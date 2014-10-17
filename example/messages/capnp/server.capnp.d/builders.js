@@ -14,6 +14,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return Builder_source._init(this._arena, pointer, this._depth + 1);
             };
             Structure.prototype.setSource = function(value) {
+                if (Builder_source._TYPE !== value._TYPE) {
+                    throw new TypeError();
+                }
                 var pointer = {
                     segment: this._segment,
                     position: this._pointersSection + 0
@@ -71,11 +74,12 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return builder.Text._deref(this._arena, pointer);
             };
             Structure.prototype.setValue = function(value) {
+                var params = builder.Text._setParams(value);
                 var pointer = {
                     segment: this._segment,
                     position: this._pointersSection + 8
                 };
-                builder.Text._set(this._arena, pointer, value);
+                builder.Text._set(this._arena, pointer, params);
             };
             Structure.prototype.hasValue = function() {
                 var pointer = {
@@ -85,6 +89,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return (!reader.isNull(pointer));
             };
             Structure.prototype.adoptValue = function(value) {
+                if (builder.Text._TYPE !== value._TYPE) {
+                    throw new TypeError();
+                }
                 builder.Text._adopt(this._arena, {
                     segment: this._segment,
                     position: this._pointersSection + 8
@@ -116,6 +123,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return Builder_messages._init(this._arena, pointer, n);
         };
         Structure.prototype.setMessages = function(value) {
+            if (Builder_messages._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 0

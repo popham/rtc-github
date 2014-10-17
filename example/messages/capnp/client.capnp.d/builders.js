@@ -43,6 +43,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 return Builder_user._init(this._arena, pointer, this._depth + 1);
             };
             Structure.prototype.setUser = function(value) {
+                if (Builder_user._TYPE !== value._TYPE) {
+                    throw new TypeError();
+                }
                 this._setWhich(1);
                 var pointer = {
                     segment: this._segment,
@@ -54,12 +57,16 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
                 if (Builder_user._TYPE !== value._TYPE) {
                     throw new TypeError();
                 }
+                this._setWhich(1);
                 Builder_user._adopt(this._arena, {
                     segment: this._segment,
                     position: this._pointersSection + 0
                 }, value);
             };
             Structure.prototype.disownUser = function() {
+                if (!this.isUser()) {
+                    throw new Error("Attempted to access an inactive union member");
+                }
                 var pointer = {
                     segment: this._segment,
                     position: this._pointersSection + 0
@@ -113,11 +120,12 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return builder.Text._deref(this._arena, pointer);
         };
         Structure.prototype.setMessage = function(value) {
+            var params = builder.Text._setParams(value);
             var pointer = {
                 segment: this._segment,
                 position: this._pointersSection + 8
             };
-            builder.Text._set(this._arena, pointer, value);
+            builder.Text._set(this._arena, pointer, params);
         };
         Structure.prototype.hasMessage = function() {
             var pointer = {
@@ -127,6 +135,9 @@ define(['capnp-js/builder/Allocator', 'capnp-js/builder/index', 'capnp-js/reader
             return (!reader.isNull(pointer));
         };
         Structure.prototype.adoptMessage = function(value) {
+            if (builder.Text._TYPE !== value._TYPE) {
+                throw new TypeError();
+            }
             builder.Text._adopt(this._arena, {
                 segment: this._segment,
                 position: this._pointersSection + 8

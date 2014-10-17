@@ -14,26 +14,31 @@ define([ "../reader/Data", "./list/statics", "./list/methods", "./layout/list" ]
     Data._CT = ct;
     Data._TYPE = t;
     statics.install(Data);
-    Data._set = function(arena, pointer, value) {
-        var source, length;
+    Data._setParams = function(value) {
         if (t === value._TYPE) {
-            source = {
-                segment: value._segment,
-                position: value._begin
+            return {
+                source: {
+                    segment: value._segment,
+                    position: value._begin
+                },
+                length: value._length
             };
-            length = value._length;
         } else if (value instanceof Uint8Array) {
-            source = {
-                segment: value,
-                position: 0
+            return {
+                source: {
+                    segment: value,
+                    position: 0
+                },
+                length: value.length
             };
-            length = value.length;
         } else {
             throw new TypeError();
         }
-        var blob = arena._preallocate(pointer.segment, length);
-        arena._write(source, length, blob);
-        layout.preallocated(pointer, blob, ct, length);
+    };
+    Data._set = function(arena, pointer, params) {
+        var blob = arena._preallocate(pointer.segment, params.length);
+        arena._write(params.source, params.length, blob);
+        layout.preallocated(pointer, blob, ct, params.length);
     };
     Data.prototype = {
         _CT: ct,

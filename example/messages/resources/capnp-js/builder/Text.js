@@ -24,26 +24,31 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
         return new Uint8Array(uintArray);
     };
     statics.install(Text);
-    Text._set = function(arena, pointer, value) {
-        var source, length;
+    Text._setParams = function(value) {
         if (t === value._TYPE) {
-            source = {
-                segment: value._segment,
-                position: value._begin
+            return {
+                source: {
+                    segment: value._segment,
+                    position: value._begin
+                },
+                length: value._length - 1
             };
-            length = value._length - 1;
         } else if (typeof value === "string") {
-            source = {
-                segment: Text._encode(value),
-                position: 0
+            return {
+                source: {
+                    segment: Text._encode(value),
+                    position: 0
+                },
+                length: source.segment.length
             };
-            length = source.segment.length;
         } else {
             throw new TypeError();
         }
-        var blob = arena._preallocate(pointer.segment, length + 1);
-        arena._write(source, length, blob);
-        layout.preallocated(pointer, blob, ct, length + 1);
+    };
+    Text._set = function(arena, pointer, params) {
+        var blob = arena._preallocate(pointer.segment, params.length + 1);
+        arena._write(params.source, params.length, blob);
+        layout.preallocated(pointer, blob, ct, params.length + 1);
     };
     Text.prototype = {
         _TYPE: t,
