@@ -12,9 +12,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 iceServers : [
                     { url : 'stun:stun.l.google.com:19302' }
                 ]
-            }, {
-                optional : [{ RtpDataChannels : true }]
-            }
+            },
+            null
         );
 
         connection.onicecandidate = function (e) {

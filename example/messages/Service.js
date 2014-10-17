@@ -42,13 +42,15 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 iceServers : [
                     { url : 'stun:stun.l.google.com:19302' }
                 ]
-            }, {
-                optional : [
-                    { DtlsSrtpKeyAgreement : true },
-                    { RtpDataChannels : true }
-                ]
-            }
+            },
+            null
         );
+
+        this.connection.onicecandidate = function (e) {
+            if (e.candidate) {
+                peerSignaller.offerIce(user.getId(), e.candidate);
+            }
+        };
 
         this.connection.ondatachannel = function (e) {
             this.channel = e.channel;
@@ -72,15 +74,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
             // Ignore subsequent data channels.
             this.connection.ondatachannel = null;
-        }.bind(this);
-
-        this.connection.onicecandidate = function (e) {
-            if (e.candidate) {
-                peerSignaller.iceCandidate(user.getId(), e.candidate);
-
-                // Only send a single candidate.
-                this.connection.onicecandidate = null;
-            }
         }.bind(this);
     };
 
