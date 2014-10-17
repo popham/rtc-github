@@ -53,6 +53,9 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
                 default: return; // Noop on unrecognized identifier.
                 }
 
+                i.setCandidate(ice.candidate);
+                i.setSdpMLineIndex(i.sdpMLineIndex);
+
                 var root = arena.initRoot(client.Client);
                 var p = root.initPeer();
                 p.getTarget().setUserId(uid);
