@@ -13,7 +13,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                     { url : 'stun:stun.l.google.com:19302' }
                 ]
             },
-            null
+            {optional : [{'DtlsSrtpKeyAgreement' : true}]}
         );
 
         connection.onicecandidate = function (e) {
