@@ -1,11 +1,7 @@
 define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/readers', './capnp/server.capnp.d/readers'], function (
             signals,            packet,                    Allocator,           client,                           server) {
 
-    var throwEvent = function (e) { throw new Error(e); };
-
     var allocator = new Allocator();
-
-    var logEvent = function (e) { console.log(e); };
 
     var DataChannelServer = function (targetUserId, peerSignaller) {
         var messaged = this.messaged = new signals.Signal();
@@ -43,9 +39,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             });
         };
 
-        this._channel.onerror = logEvent;
+        this._channel.onerror = console.log;
 
-        this._channel.onclose = logEvent;
+        this._channel.onclose = console.log;
 
         connection.createOffer(
             function (description) {
@@ -54,10 +50,10 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                     function () {
                         peerSignaller.offer(targetUserId, connection.localDescription);
                     },
-                    logEvent
+                    console.log
                 );
             },
-            logEvent
+            console.log
         );
     };
 
@@ -65,7 +61,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         this.connection.setRemoteDescription(
             new RTCSessionDescription(answer.getSdp().asString()),
             function () {},
-            logEvent
+            console.log
         );
     };
 

@@ -98,13 +98,13 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                             function () {
                                 peer.answer(sdp);
                             },
-                            error
+                            console.log
                         );
                     },
-                    error
+                    console.log
                 );
             },
-            error
+            console.log
         );
     };
 
