@@ -102,7 +102,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                     console.log
                 );
             },
-            console.log
+            function (e) { console.log('failing'); console.log(e); }
         );
 
 /*
