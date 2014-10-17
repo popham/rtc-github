@@ -78,6 +78,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelClient.prototype.answer = function (offer) {
+        console.log('Answering');
+        console.log(offer.getSdp().asString());
         var offer = new RTCSessionDescription({
             type : 'offer',
             sdp : offer.getSdp().asString()
