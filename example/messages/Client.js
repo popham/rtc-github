@@ -1,9 +1,11 @@
 define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/readers', './capnp/server.capnp.d/readers'], function (
             signals,            packet,                    Allocator,           client,                           server) {
 
-    var error = function (e) { throw new Error(e); };
+    var throwEvent = function (e) { throw new Error(e); };
 
     var allocator = new Allocator();
+
+    var logEvent = function (e) { console.log(e); };
 
     var DataChannelServer = function (targetUserId, peerSignaller) {
         var messaged = this.messaged = new signals.Signal();
@@ -41,32 +43,29 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             });
         };
 
-        this._channel.onerror = function (e) {
-            console.log(e);
-        };
+        this._channel.onerror = logEvent;
 
-        this._channel.onclose = function (e) {
-            console.log(e);
-        };
+        this._channel.onclose = logEvent;
 
-        connection.createOffer(function (description) {
-            connection.setLocalDescription(
-                description,
-                function () {
-                    peerSignaller.offer(targetUserId, connection.localDescription)
-                },
-                function (e) {
-                    console.log(e);
-                }
-            );
-        });
+        connection.createOffer(
+            function (description) {
+                connection.setLocalDescription(
+                    description,
+                    function () {
+                        peerSignaller.offer(targetUserId, connection.localDescription);
+                    },
+                    logEvent
+                );
+            },
+            logEvent
+        );
     };
 
     DataChannelServer.prototype.finalize = function (answer) {
         this.connection.setRemoteDescription(
             new RTCSessionDescription(answer.getSdp().asString()),
             function () {},
-            error
+            logEvent
         );
     };
 
@@ -86,7 +85,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                 this._server.addIceCandidate(peer.getIceCandidate());
                 break;
             default:
-                throw new Error('Client only accepts ice candidates or answers');
+                console.log('Client only accepts ice candidates or answers');
             }
         }.bind(this));
     };
