@@ -87,6 +87,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
         this.connection.setRemoteDescription(
             offer,
+            function () { console.log('success'); },
+            function () { console.log('failure'); });
+/*
+        this.connection.setRemoteDescription(
+            offer,
             function () {
                 console.log('setRemoteD success');
                 this.connection.createAnswer(
@@ -106,13 +111,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             },
             function (e) { console.log('failing'); console.log(e); }
         );
-
-/*
-        this.connection.setRemoteDescription(offer);
-        this.connection.createAnswer(function (description) {
-            this.connection.setLocalDescription(description);
-            peer.answer(description);
-        });
 */
     };
 
