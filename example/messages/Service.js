@@ -81,8 +81,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         console.log('Answering');
         console.log(offer.getSdp().asString());
         var offer = new RTCSessionDescription({
-            type : 'offer',
-            sdp : offer.getSdp().asString()
+            sdp : offer.getSdp().asString(),
+            type : 'offer'
         });
 
         this.connection.setRemoteDescription(
