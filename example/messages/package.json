@@ -12,7 +12,7 @@
   "author": "",
   "devDependencies": {
     "bower": "^1.3.12",
-    "capnp-js-plugin": "0.0.18",
+    "capnp-js-plugin": "0.0.19",
     "uglifyjs": "^2.3.6"
   },
   "dependencies": {
