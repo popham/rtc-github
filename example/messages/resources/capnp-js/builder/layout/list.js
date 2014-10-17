@@ -1,16 +1,16 @@
 define([ "../far", "./structure" ], function(far, structure) {
     var lo = function(pointer, layout, length) {
         pointer.segment[pointer.position + 4] = length << 3 | layout;
-        pointer.segment[pointer.position + 5] = length << 11;
-        pointer.segment[pointer.position + 6] = length << 19;
-        pointer.segment[pointer.position + 7] = length << 27;
+        pointer.segment[pointer.position + 5] = length >>> 5;
+        pointer.segment[pointer.position + 6] = length >>> 13;
+        pointer.segment[pointer.position + 7] = length >>> 21;
     };
     var composite = function(pointer, blob, meta, length) {
         lo(pointer, 7, length * (meta.dataBytes + meta.pointersBytes >>> 3));
         blob.segment[blob.position] = length << 2;
-        blob.segment[blob.position + 1] = length << 10;
-        blob.segment[blob.position + 2] = length << 18;
-        blob.segment[blob.position + 3] = length << 26;
+        blob.segment[blob.position + 1] = length >>> 6;
+        blob.segment[blob.position + 2] = length >>> 14;
+        blob.segment[blob.position + 3] = length >>> 22;
         structure.wordCounts(blob, meta.dataBytes >>> 3, meta.pointersBytes >>> 3);
     };
     var intrasegment = function(pointer, blob, meta, length) {
