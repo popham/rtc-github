@@ -1,5 +1,5 @@
-define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/readers', './capnp/server.capnp.d/readers'], function (
-            signals,            packet,                    Allocator,           client,                           server) {
+define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/readers', './capnp/server.capnp.d/readers'], function (
+            signals,            packet,                    Allocator,     toCandidate,           client,                           server) {
 
     var allocator = new Allocator();
 
@@ -64,11 +64,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelServer.prototype.addIceCandidate = function (ice) {
-        this.connection.addIceCandidate(new RTCIceCandidate({
-            candidate : ice.getCandidate(),
-            sdpMid : ice.getSdpMId(),
-            sdpMLineIndex : ice.getSdpMLineIndex()
-        }));
+        this.connection.addIceCandidate(toCandidate(ice));
     };
 
     var Client = function (targetUserId, signal) {

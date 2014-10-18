@@ -1,5 +1,5 @@
-define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
-            signals,            packet,                    Allocator,           client,                            server) {
+define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
+            signals,            packet,                    Allocator,     toCandidate,           client,                            server) {
 
     var allocator = new Allocator();
 
@@ -108,8 +108,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         );
     };
 
-    DataChannelClient.prototype.addIceCandidate = function (candidate) {
-        this.connection.addIceCandidate(new RTCIceCandidate(candidate));
+    DataChannelClient.prototype.addIceCandidate = function (ice) {
+        this.connection.addIceCandidate(toCandidate(ice));
     };
 
     var Service = function (signal, session) {
@@ -133,8 +133,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
             switch (peer.which()) {
             case peer.OFFER: client.answer(peer.getOffer()); break;
-            case peer.ICE_CANDIDATE:
-                client.addIceCandidate(peer.getIceCandidate());
+            case peer.ICE:
+                client.addIceCandidate(peer.getIce());
                 break;
             default:
                 throw new Error('Service only accepts ice candidates or offers');
