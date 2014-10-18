@@ -78,8 +78,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelClient.prototype.answer = function (offer) {
+        function ans(sdp) {
+            this.peer.answer(this.user.getId(), sdp);
+        }.bind(this);
+
         var connection = this.connection;
-        var peer = this.peer;
         var offer = new RTCSessionDescription({
             sdp : offer.getSdp().asString(),
             type : 'offer'
@@ -96,7 +99,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
                             sdp,
                             function () {
                                 console.log('answering');
-                                peer.answer(sdp);
+                                ans(sdp);
                             },
                             console.log
                         );
