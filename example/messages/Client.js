@@ -77,6 +77,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
             switch (peer.which()) {
             case peer.ANSWER: this._server.finalize(peer.getAnswer()); break;
             case peer.ICE:
+                console.log('Candidate: '+peer.getIce().getCandidate().asString());
                 this._server.addIceCandidate(peer.getIce());
                 break;
             default:
