@@ -78,8 +78,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelClient.prototype.answer = function (offer) {
-        var ans = function (sdp) {
-            this.peer.answer(this.user.getId(), sdp);
+        var ans = function (description) {
+            this.peer.answer(this.user.getId(), description);
         }.bind(this);
 
         var connection = this.connection;
@@ -93,13 +93,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             function () {
                 console.log('RemoteDescription successfully set');
                 connection.createAnswer(
-                    function (sdp) {
-                        console.log('createAnswer callback');
+                    function (description) {
                         connection.setLocalDescription(
-                            sdp,
+                            description,
                             function () {
-                                console.log('answering');
-                                ans(sdp);
+                                ans(description);
                             },
                             console.log
                         );
