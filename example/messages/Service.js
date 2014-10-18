@@ -78,7 +78,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelClient.prototype.answer = function (offer) {
-        function ans(sdp) {
+        var ans = function (sdp) {
             this.peer.answer(this.user.getId(), sdp);
         }.bind(this);
 
