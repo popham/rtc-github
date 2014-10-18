@@ -91,7 +91,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         connection.setRemoteDescription(
             offer,
             function () {
-                console.log('RemoteDescription successfully set');
                 connection.createAnswer(
                     function (description) {
                         connection.setLocalDescription(
