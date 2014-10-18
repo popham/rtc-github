@@ -25,9 +25,10 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
         };
 
         this._channel = connection.createDataChannel('chat', {reliable : false});
+        this._channel.binaryType = 'arraybuffer';
 
         this._channel.onmessage = function (e) {
-            var arena = packet.toArena(e.data);
+            var arena = packet.toArena(new Uint8Array(e.data));
             var root = arena.getRoot(server.Server);
             root.getMessages().forEach(function (message) {
                 messaged.dispatch(message);

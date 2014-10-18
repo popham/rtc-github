@@ -54,11 +54,12 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
 
         this.connection.ondatachannel = function (e) {
             this.channel = e.channel;
+            this.channel.binaryType = 'arraybuffer';
 
             // Attach user id (reject client's authority), and then forward the
             // message on to the worker.
             this.channel.onmessage = function (e) {
-                var arena = Allocator.constCast(packet.toArena(e.data));
+                var arena = Allocator.constCast(packet.toArena(new Uint8Array(e.data)));
                 var root = arena.getRoot(client.Client);
                 root.getSource().setUser(this.user);
                 console.log('RTC channel sending message to worker.');
