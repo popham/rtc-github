@@ -1,4 +1,4 @@
-define([], function () {
+define(['rtc-github-protocol/peer.capnp.d/readers'], function (peer) {
 
     return function (ice) {
         var mid;
