@@ -78,21 +78,21 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
     };
 
     DataChannelClient.prototype.answer = function (offer) {
-        console.log('Answering');
-        console.log(offer.getSdp().asString());
+        var connection = this.connection;
+
         var offer = new RTCSessionDescription({
             sdp : offer.getSdp().asString(),
             type : 'offer'
         });
 
-        this.connection.setRemoteDescription(
+        connection.setRemoteDescription(
             offer,
             function () {
                 console.log('RemoteDescription successfully set');
-                this.connection.createAnswer(
+                connection.createAnswer(
                     function (sdp) {
                         console.log('createAnswer callback');
-                        this.connection.setLocalDescription(
+                        connection.setLocalDescription(
                             sdp,
                             function () {
                                 console.log('answering');
