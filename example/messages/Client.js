@@ -58,8 +58,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
     DataChannelServer.prototype.finalize = function (answer) {
         this.connection.setRemoteDescription(
-            new RTCSessionDescription(answer.getSdp().asString()),
-            function () {},
+            new RTCSessionDescription({
+                type : 'answer',
+                sdp : answer.getSdp().asString()
+            }),
+            function () { console.log('Successfully finalized the peer connection'); },
             console.log
         );
     };
