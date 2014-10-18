@@ -117,7 +117,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
             if (this._localClients.length > 0) {
                 var root = packet.toArena(e.data).getRoot(server.Server);
                 for (k=0; k<this._localClients.length; ++k) {
-                    this._localClients[k].messaged.dispatch(root);
+                    root.getMessages().forEach(function (message) {
+                        this._localClients[k].messaged.dispatch(message);
+                    }.bind(this));
                 }
             }
         }.bind(this);
