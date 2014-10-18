@@ -67,8 +67,12 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         );
     };
 
-    DataChannelServer.prototype.addIceCandidate = function (candidate) {
-        this.connection.addIceCandidate(new RTCIceCandidate(candidate));
+    DataChannelServer.prototype.addIceCandidate = function (ice) {
+        this.connection.addIceCandidate(new RTCIceCandidate({
+            candidate : ice.getCandidate(),
+            sdpMid : ice.getSdpMId(),
+            sdpMLineIndex : ice.getSdpMLineIndex()
+        }));
     };
 
     var Client = function (targetUserId, signal) {
@@ -80,7 +84,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             switch (peer.which()) {
             case peer.ANSWER: this._server.finalize(peer.getAnswer()); break;
             case peer.ICE:
-                this._server.addIceCandidate(peer.getIceCandidate());
+                this._server.addIceCandidate(peer.getIce());
                 break;
             default:
                 console.log('Client only accepts ice candidates or answers');
