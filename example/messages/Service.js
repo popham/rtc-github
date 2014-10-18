@@ -87,13 +87,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
         this.connection.setRemoteDescription(
             offer,
-            function () { console.log('success'); },
-            function () { console.log('failure'); });
-/*
-        this.connection.setRemoteDescription(
-            offer,
             function () {
-                console.log('setRemoteD success');
+                console.log('RemoteDescription successfully set');
                 this.connection.createAnswer(
                     function (sdp) {
                         console.log('createAnswer callback');
@@ -111,7 +106,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             },
             function (e) { console.log('failing'); console.log(e); }
         );
-*/
     };
 
     DataChannelClient.prototype.addIceCandidate = function (candidate) {
