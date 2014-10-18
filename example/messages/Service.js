@@ -85,6 +85,8 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
             type : 'offer'
         });
 
+        this.connection.onsignalingstatechange = function () { console.log('state change'); };
+
         this.connection.setRemoteDescription(
             offer,
             function () { console.log('success'); },
