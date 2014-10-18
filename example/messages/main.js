@@ -70,12 +70,10 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         };
 
         var onMessage = function (message) {
-            message.getMessages().forEach(function (message) {
-                printMessage(
-                    message.getSource().getName().asString(),
-                    message.getValue().asString().trim()
-                );
-            });
+            printMessage(
+                message.getSource().getName().asString(),
+                message.getValue().asString().trim()
+            );
 
             return false;
         };
