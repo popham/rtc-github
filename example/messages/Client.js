@@ -26,10 +26,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
         this._channel = connection.createDataChannel('chat', {reliable : false});
 
-        this._channel.onopen = function (e) {
-            console.log('peep');
-        };
-
         this._channel.onmessage = function (e) {
             var arena = packet.toArena(e.data);
             var root = arena.getRoot(server.Server);
