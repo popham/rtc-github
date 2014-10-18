@@ -88,7 +88,9 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
     Client.prototype.send = function (message) {
         var root = allocator.initRoot(client.Client);
         root.setMessage(message);
-        this._server.channel.send(packet.fromStruct(root));
+
+        // This is a good place for a queue.
+        this._server._channel.send(packet.fromStruct(root));
     };
 
     Client.prototype.kill = function () {
