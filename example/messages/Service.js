@@ -8,12 +8,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
 
         this._service = service;
         this._worker = worker;
-
-        worker.onmessage = function (e) {
-            console.log('LocalClient receiving data...')
-            var root = packet.toArena(e.data).getRoot(server.Server);
-            messaged.dispatch(root);
-        };
     };
 
     LocalClient.prototype.send = function (message) {
@@ -66,13 +60,6 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
                 this.worker.postMessage(packet.fromStruct(root));
             }.bind(this);
 
-            this.worker.onmessage = function (e) {
-                console.log('RTC channel sending message to client.');
-
-                // Forward server messages verbatim.
-                this.channel.send(e.data);
-            }.bind(this);
-
             // Ignore subsequent data channels.
             this.connection.ondatachannel = null;
         }.bind(this);
@@ -119,6 +106,21 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
         this._localClients = [];
         this._worker = new Worker('kernel.js');
         this._signal = signal;
+
+        this._worker.onmessage = function (e) {
+            var k;
+
+            for (k in this._remoteClients) {
+                this._remoteClients[k].channel.send(e.data);
+            }
+
+            if (this._localClients.length > 0) {
+                var root = packet.toArena(e.data).getRoot(server.Server);
+                for (k=0; k<this._localClients.length; ++k) {
+                    this._localClients[k].messaged.dispatch(root);
+                }
+            }
+        }.bind(this);
 
         signal.peered.add(this._onPeered = function (peer) {
             var user = peer.getSource().getUser();
