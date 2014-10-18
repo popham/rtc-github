@@ -34,7 +34,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
          * is private.
          */
         this.user = user;
-        var peer = this.peer = peerSignaller;
+        this.peer = peerSignaller;
         this.worker = worker;
         this.channel = null;
         this.connection = new RTCPeerConnection(
@@ -79,7 +79,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
 
     DataChannelClient.prototype.answer = function (offer) {
         var connection = this.connection;
-
+        var peer = this.peer;
         var offer = new RTCSessionDescription({
             sdp : offer.getSdp().asString(),
             type : 'offer'
