@@ -24,7 +24,10 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
             }
         };
 
-        this._channel = connection.createDataChannel('chat', {reliable : false});
+        this._channel = connection.createDataChannel('chat', {
+            ordered : false,
+            maxRetransmits : 0
+        });
         this._channel.binaryType = 'arraybuffer';
 
         this._channel.onmessage = function (e) {
