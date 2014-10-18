@@ -79,7 +79,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './capnp/
         signal.peered.add(this._onPeered = function (peer) {
             switch (peer.which()) {
             case peer.ANSWER: this._server.finalize(peer.getAnswer()); break;
-            case peer.ICE_CANDIDATE:
+            case peer.ICE:
                 this._server.addIceCandidate(peer.getIceCandidate());
                 break;
             default:
