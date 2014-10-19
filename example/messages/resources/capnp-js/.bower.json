@@ -1,6 +1,6 @@
 {
   "name": "capnp-js",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "authors": [
     "Tim Popham"
   ],
@@ -22,13 +22,13 @@
   "ignore": [
     "**/.*"
   ],
-  "_release": "0.0.24",
+  "_release": "0.0.25",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.24",
-    "commit": "0845690f719969885616398b851de6149972ff7b"
+    "tag": "0.0.25",
+    "commit": "75731629311fd887caf435ab1c1a168b0ec8c95c"
   },
   "_source": "git://github.com/popham/capnp-js-amd.git",
-  "_target": "~0.0.24",
+  "_target": "~0.0.25",
   "_originalSource": "capnp-js"
 }

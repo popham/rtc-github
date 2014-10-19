@@ -11,9 +11,9 @@ define([ "./reader/Arena", "./builder/Allocator", "./builder/copy/deep" ], funct
             arena._segments.forEach(function(s) {
                 size += s._position;
             });
-            var packetArena = allocator.createArena(size);
-            deep.setStructurePointer(arena, instance._layout(), packetArena, packetArena._root());
-            singleton = packetArena.getSegment(0);
+            var nonframedArena = allocator.createArena(size);
+            deep.setStructurePointer(arena, instance._layout(), nonframedArena, nonframedArena._root());
+            singleton = nonframedArena.getSegment(0);
         } else {
             singleton = arena.getSegment(0);
         }
