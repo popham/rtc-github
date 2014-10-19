@@ -28,6 +28,7 @@
     "jade": "^1.7.0",
     "node-uuid": "^1.4.1",
     "redis": "^0.12.1",
-    "rtc-github-protocol": "git://github.com/popham/rtc-github-protocol-node"
+    "rtc-github-protocol": "git://github.com/popham/rtc-github-protocol-node",
+    "unirest": "^0.2.7"
   }
 }
