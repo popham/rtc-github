@@ -93,6 +93,21 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             hosts.innerHTML = options;
         };
 
+        /*
+         * Create a client specific handler for hosts updates.  Quit with the
+         * host.
+         */
+        var quitWithHost = function (host) {
+            return function (users) {
+                var ids = {};
+                users.forEach(function (user) {
+                    ids[user.getId()] = null;
+                });
+
+                if (ids[host.id] !== null) state.trigger('quit');
+            };
+        };
+
         var uiReset = function () {
             unselectHost();
             hosts.disabled = true;
@@ -132,12 +147,14 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var signal = null;
         var client = null;
         var service = null;
+        var onClientHostsUpdate = null;
 
         var logOut = [function (done) {
             if (signal) {
                 signal.hostsUpdated.remove(onHostsUpdate);
                 signal.kill();
             }
+            signal.hostsUpdated.remove(onClientHostsUpdate);
             signal = null;
             uiAnonymous();
             done();
@@ -175,13 +192,16 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             uiHost();
                             selectHost(service.getOwner());
                             done();
-                        });
+                        }, done); // Technically, the error of a failed promise
+                                  // could be falsy, causing a bug here.
                     }, 'host'],
                     accept : [function (done) {
                         var host = selectedHost();
                         if (host) {
                             client = new Client(host.id, signal);
                             client.messaged.add(onMessage);
+                            onClientHostsUpdate = quitWithHost(host);
+                            signal.hostsUpdated.add(onClientHostsUpdate);
                             send.onclick = onSend(client);
                             clear.onclick = onClear;
                             uiGuest();
@@ -207,6 +227,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     logOut : logOut,
                     quit : [function (done) {
                         if (client) client.kill();
+                        signal.hostsUpdated.remove(onClientHostsUpdate);
                         client = null;
                         send.onclick = null;
                         clear.onclick = null;
