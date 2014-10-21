@@ -1,6 +1,9 @@
 define([], function () {
     /**
-     * Create a finite state machine.
+     * Create a finite state machine.  Supposing a state transition function
+     * called `actionN` with trigger `machina.trigger('actionN', [arg1, arg2])`,
+     * the signature of `actionN` looks like `function (arg1, arg2, done)`.
+     *
      * @param {String} initialState - The FSM's first state.
      * @param {Object} diagram - The state machine's diagram, e.g.
      *     {
