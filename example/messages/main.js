@@ -95,6 +95,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             offer.disabled = true;
             accept.disabled = true;
             quit.disabled = true;
+            history.innerHTML = "";
             message.disabled = true;
             message.value = "";
             send.disabled = true;
@@ -127,7 +128,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
         var signal = null;
         var client = null;
         var service = null;
-        var priorHost = null;
 
         var logOut = [function (done) {
             if (signal) {
@@ -150,6 +150,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         signal.connecting.done(
                             function () { uiAuthenticated(); done(); },
                             function (e) {
+                                // Clean up and abort transition.
                                 signal.kill();
                                 onHostsUpdate(Signal.EMPTY_HOSTS);
                                 done(e);
@@ -167,7 +168,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                             local.messaged.add(onMessage);
                             send.onclick = onSend(local);
                             clear.onclick = onClear;
-                            priorHost = null;
                             uiHost();
                             selectHost(service.getOwner());
                             done();
@@ -179,8 +179,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
                         clear.onclick = onClear;
-                        if (priorHost !== hostId) history.innerHTML = "";
-                        priorHost = selectedHost();
                         uiGuest();
                         selectHost();
                         done();
@@ -193,7 +191,6 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                         service = null;
                         send.onclick = null;
                         clear.onclick = null;
-                        history.innerHTML = "";
                         uiAuthenticated();
                         done();
                     }, 'authenticated']
