@@ -20,10 +20,14 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var selectedHost = function () {
             var host = hosts.item(hosts.selectedIndex);
-            return {
-                id : host.value,
-                name : host.text
-            };
+            if (host) {
+                return {
+                    id : host.value,
+                    name : host.text
+                };
+            } else {
+                return null;
+            }
         };
 
         var selectHost = function (choice) {
