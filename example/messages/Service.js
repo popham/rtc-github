@@ -104,7 +104,7 @@ define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toC
         this._hostUser = session.getUser();
         this._remoteClients = {};
         this._localClients = [];
-        this._worker = new Worker('kernel.js');
+        this._worker = new Worker('service/kernel.js');
         this._signal = signal;
 
         this._worker.onmessage = function (e) {

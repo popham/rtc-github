@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "clean": "rm -rf capnp/*.capnp.d",
-    "polyfill": "cat adapter.js | uglifyjs -o polyfill.js",
+    "polyfill": "cat polyfill/*.js | uglifyjs -o polyfill.js",
     "capnp": "capnp compile -ojs -I node_modules/ capnp/*.capnp",
     "build": "npm run rebuild",
     "rebuild": "npm run clean && npm run capnp && npm run polyfill"
