@@ -1,5 +1,5 @@
-define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
-            signals,            packet,                    Allocator,     toCandidate,           client,                            server) {
+define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
+            signals,            nonframed,                    Allocator,     toCandidate,           client,                            server) {
 
     var allocator = new Allocator();
 
@@ -31,7 +31,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
         this._channel.binaryType = 'arraybuffer';
 
         this._channel.onmessage = function (e) {
-            var arena = packet.toArena(new Uint8Array(e.data));
+            var arena = nonframed.toArena(new Uint8Array(e.data));
             var root = arena.getRoot(server.Server);
             root.getMessages().forEach(function (message) {
                 messaged.dispatch(message);
@@ -94,7 +94,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
         root.setMessage(message);
 
         // This is a good place for a queue.
-        this._server._channel.send(packet.fromStruct(root));
+        this._server._channel.send(nonframed.fromStruct(root));
     };
 
     Client.prototype.kill = function () {

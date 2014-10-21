@@ -1,5 +1,5 @@
-define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', 'rtc-github-protocol/peer.capnp.d/builders', 'rtc-github-protocol/server.capnp.d/readers', 'rtc-github-protocol/client.capnp.d/builders', './settings'], function (
-         when,      signals,            packet,                    Allocator,                       peer,                                        server,                                       client,                      settings) {
+define(['when', 'js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', 'rtc-github-protocol/peer.capnp.d/builders', 'rtc-github-protocol/server.capnp.d/readers', 'rtc-github-protocol/client.capnp.d/builders', './settings'], function (
+         when,      signals,            nonframed,                    Allocator,                       peer,                                        server,                                       client,                      settings) {
 
     var allocator = new Allocator();
 
@@ -97,7 +97,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
         socket.binaryType = 'arraybuffer';
 
         socket.onmessage = function (e) {
-            var message = packet.toArena(new Uint8Array(e.data)).getRoot(server.Server);
+            var message = nonframed.toArena(new Uint8Array(e.data)).getRoot(server.Server);
             switch (message.which()) {
             case message.SESSION:
                 this._deferredConnection.resolve(message.getSession());
@@ -127,7 +127,7 @@ define(['when', 'js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', '
     };
 
     Signal.prototype._send = function (request) {
-        this._socket.send(packet.fromStruct(request));
+        this._socket.send(nonframed.fromStruct(request));
     };
 
     return Signal;

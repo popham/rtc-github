@@ -1,5 +1,5 @@
-define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
-            signals,            packet,                    Allocator,     toCandidate,           client,                            server) {
+define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
+            signals,            nonframed,                    Allocator,     toCandidate,           client,                            server) {
 
     var allocator = new Allocator();
 
@@ -19,7 +19,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
         root.getSource().setUser(user);
         root.setMessage(message);
         console.log('LocalClient sending message to worker.');
-        this._worker.postMessage(packet.fromStruct(root));
+        this._worker.postMessage(nonframed.fromStruct(root));
     };
 
     var DataChannelClient = function (user, peerSignaller, worker) {
@@ -53,11 +53,11 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
             // Attach user id (reject client's authority), and then forward the
             // message on to the worker.
             this.channel.onmessage = function (e) {
-                var arena = Allocator.constCast(packet.toArena(new Uint8Array(e.data)));
+                var arena = Allocator.constCast(nonframed.toArena(new Uint8Array(e.data)));
                 var root = arena.getRoot(client.Client);
                 root.getSource().setUser(this.user);
                 console.log('RTC channel sending message to worker.');
-                this.worker.postMessage(packet.fromStruct(root));
+                this.worker.postMessage(nonframed.fromStruct(root));
             }.bind(this);
 
             // Ignore subsequent data channels.
@@ -115,7 +115,7 @@ define(['js-signals', 'capnp-js/packet', 'capnp-js/builder/Allocator', './toCand
             }
 
             if (this._localClients.length > 0) {
-                var root = packet.toArena(e.data).getRoot(server.Server);
+                var root = nonframed.toArena(e.data).getRoot(server.Server);
                 for (k=0; k<this._localClients.length; ++k) {
                     root.getMessages().forEach(function (message) {
                         this._localClients[k].messaged.dispatch(message);
