@@ -175,6 +175,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     }, 'host'],
                     accept : [function (done) {
                         var hostId = selectedHost().id;
+                        if (!hostId) done('Cannot join a nonhost');
                         client = new Client(hostId, signal);
                         client.messaged.add(onMessage);
                         send.onclick = onSend(client);
