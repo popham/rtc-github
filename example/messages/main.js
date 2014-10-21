@@ -179,14 +179,17 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
                     }, 'host'],
                     accept : [function (done) {
                         var host = selectedHost();
-                        if (!host) done('Cannot join a nonhost');
-                        client = new Client(host.id, signal);
-                        client.messaged.add(onMessage);
-                        send.onclick = onSend(client);
-                        clear.onclick = onClear;
-                        uiGuest();
-                        selectHost();
-                        done();
+                        if (host) {
+                            client = new Client(host.id, signal);
+                            client.messaged.add(onMessage);
+                            send.onclick = onSend(client);
+                            clear.onclick = onClear;
+                            uiGuest();
+                            selectHost();
+                            done();
+                        } else {
+                            done('Cannot join a nonhost');
+                        }
                     }, 'guest']
                 },
                 host : {
