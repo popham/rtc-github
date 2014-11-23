@@ -58,10 +58,7 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
                 user: (function() {
                     var Reader = scope["0x95570979dae93deb"];
                     var arena = allocator._fromBase64("AAAAAAAAAAA=").asReader();
-                    return Reader._deref(arena, {
-                        segment: arena.getSegment(0),
-                        position: 0
-                    }, 0);
+                    return Reader._deref(arena, arena._root(), 0);
                 })()
             };
             return Structure;
@@ -83,11 +80,8 @@ define(['capnp-js/builder/Allocator', 'capnp-js/reader/index', './rScope', './co
         Structure.prototype._defaults = {
             message: (function() {
                 var Reader = reader.Text;
-                var arena = allocator._fromBase64("AQAAAAoAAAAAAAAAAAAAAA==").asReader();
-                return Reader._deref(arena, {
-                    segment: arena.getSegment(0),
-                    position: 0
-                }, 0);
+                var arena = allocator._fromBase64("AQAAAAMAAAA=").asReader();
+                return Reader._deref(arena, arena._root(), 0);
             })()
         };
         return Structure;

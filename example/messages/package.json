@@ -12,7 +12,7 @@
   "author": "",
   "devDependencies": {
     "bower": "^1.3.12",
-    "capnp-js-plugin": "0.1.0",
+    "capnp-js-plugin": "0.1.4",
     "uglifyjs": "^2.3.6",
     "rtc-github-protocol": "git://github.com/popham/rtc-github-protocol"
   }
