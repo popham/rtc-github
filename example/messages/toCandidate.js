@@ -9,7 +9,7 @@ define(['rtc-github-protocol/peer.capnp.d/readers'], function (peer) {
         }
 
         return new RTCIceCandidate({
-            candidate : ice.getCandidate().asString(),
+            candidate : ice.getCandidate().toString(),
             sdpMid : mid,
             sdpMLineIndex : ice.getSdpMLineIndex()
         });

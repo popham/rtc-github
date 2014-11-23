@@ -60,7 +60,7 @@ define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toC
         this.connection.setRemoteDescription(
             new RTCSessionDescription({
                 type : 'answer',
-                sdp : answer.getSdp().asString()
+                sdp : answer.getSdp().toString()
             }),
             function () { console.log('Successfully finalized the peer connection'); },
             console.log
@@ -80,7 +80,7 @@ define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toC
             switch (peer.which()) {
             case peer.ANSWER: this._server.finalize(peer.getAnswer()); break;
             case peer.ICE:
-                console.log('Candidate: '+peer.getIce().getCandidate().asString());
+                console.log('Candidate: '+peer.getIce().getCandidate().toString());
                 this._server.addIceCandidate(peer.getIce());
                 break;
             default:

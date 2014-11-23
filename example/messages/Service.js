@@ -72,7 +72,7 @@ define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toC
 
         var connection = this.connection;
         var offer = new RTCSessionDescription({
-            sdp : offer.getSdp().asString(),
+            sdp : offer.getSdp().toString(),
             type : 'offer'
         });
 

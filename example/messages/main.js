@@ -32,7 +32,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var selectHost = function (choice) {
             if (choice) {
-                currentHost.innerHTML = choice.getName().asString();
+                currentHost.innerHTML = choice.getName().toString();
             } else {
                 currentHost.innerHTML = selectedHost().name;
             }
@@ -75,8 +75,8 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
 
         var onMessage = function (message) {
             printMessage(
-                message.getSource().getName().asString(),
-                message.getValue().asString().trim()
+                message.getSource().getName().toString(),
+                message.getValue().toString().trim()
             );
 
             return false;
@@ -86,7 +86,7 @@ define(['domReady', './StateMachine', './Service', './Client', './Signal'], func
             var options = '';
             users.forEach(function (user) {
                 options += '<option value="'+user.getId()+'">';
-                options += user.getName().asString();
+                options += user.getName().toString();
                 options += '</option>';
             });
 
