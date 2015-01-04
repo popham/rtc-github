@@ -1,4 +1,4 @@
-define([ "../../type", "../primitives", "./deref", "./methods" ], function(type, primitives, deref, methods) {
+define([ "../../type", "../primitives", "./statics", "./methods" ], function(type, primitives, statics, methods) {
     var t = new type.Terminal();
     var ct = {
         meta: 1,
@@ -6,9 +6,10 @@ define([ "../../type", "../primitives", "./deref", "./methods" ], function(type,
         dataBytes: null,
         pointersBytes: null
     };
-    var Bools = function(arena, depth, list) {
+    var Bools = function(arena, depth, isOrphan, list) {
         this._arena = arena;
         this._depth = depth;
+        this._isOrphan = isOrphan;
         this._segment = list.segment;
         this._begin = list.begin;
         this._length = list.length;
@@ -19,7 +20,10 @@ define([ "../../type", "../primitives", "./deref", "./methods" ], function(type,
     };
     Bools._TYPE = t;
     Bools._CT = ct;
-    Bools._deref = deref(Bools);
+    Bools._FIELD = {};
+    Bools._HASH = "L|B";
+    Bools._B64_NULL = "AQAAAAEAAAA=";
+    statics.install(Bools);
     Bools.prototype = {
         _TYPE: t,
         _CT: ct,

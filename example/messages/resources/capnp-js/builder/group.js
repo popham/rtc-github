@@ -3,7 +3,7 @@ define([ "./methods" ], function(methods) {
         var Group = function(parent) {
             var layout = parent._layout();
             this._arena = parent._arena;
-            this._isDisowned = false;
+            this._isOrphan = false;
             this._segment = layout.segment;
             this._dataSection = layout.dataSection;
             this._pointersSection = layout.pointersSection;

@@ -18,6 +18,7 @@ define([ "./Limiter" ], function(Limiter) {
         }
         return this._segments[id];
     };
+    Reader.IS_READER = Reader.prototype.IS_READER = false;
     Reader.prototype.getRoot = function(Structure) {
         return Structure._deref(this, this._root(), 0);
     };

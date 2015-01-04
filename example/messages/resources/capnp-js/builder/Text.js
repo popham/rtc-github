@@ -1,9 +1,9 @@
-define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ], function(Reader, statics, methods, layout) {
+define([ "../reader/layout/list", "../reader/Text", "./list/field/index", "./copy/pointer", "./list/statics", "./list/methods", "./layout/list", "./fields" ], function(reader, Reader, listField, copy, statics, methods, layout, fields) {
     var t = Reader._TYPE;
     var ct = Reader._CT;
-    var Text = function(arena, layout, isDisowned) {
+    var Text = function(arena, isOrphan, layout) {
         this._arena = arena;
-        this._isDisowned = isDisowned;
+        this._isOrphan = isOrphan;
         this._segment = layout.segment;
         this._begin = layout.begin;
         this._length = layout.length;
@@ -13,43 +13,92 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
     Text._READER = Reader;
     Text._TYPE = t;
     Text._CT = ct;
+    Text._FIELD = {};
+    Text._HASH = Reader._HASH;
     Text._decode = Reader._decode;
     // http://stackoverflow.com/questions/17191945/conversion-between-utf-8-arraybuffer-and-string#answer-17192845
     Text._encode = function(string) {
         string = unescape(encodeURIComponent(string));
-        var uintArray = [];
+        var uintArray = new Uint8Array(string.length);
         for (var i = 0; i < string.length; ++i) {
-            uintArray.push(string.charCodeAt(i));
+            uintArray[i] = string.charCodeAt(i);
         }
-        return new Uint8Array(uintArray);
+        return uintArray;
     };
-    statics.install(Text);
-    Text._setParams = function(value) {
-        if (t === value._TYPE) {
-            return {
-                source: {
-                    segment: value._segment,
-                    position: value._begin
-                },
-                length: value._length - 1
-            };
-        } else if (typeof value === "string") {
-            var segment = Text._encode(value);
-            return {
-                source: {
-                    segment: segment,
-                    position: 0
-                },
-                length: segment.length
-            };
-        } else {
-            throw new TypeError();
-        }
+    var stringSet = function(arena, pointer, str) {
+        str = Text._encode(str);
+        var target = Text._init(arena, pointer, str.length);
+        target._segment.set(str, target._begin);
     };
-    Text._set = function(arena, pointer, params) {
-        var blob = arena._preallocate(pointer.segment, params.length + 1);
-        arena._write(params.source, params.length, blob);
-        layout.preallocated(pointer, blob, ct, params.length + 1);
+    statics.deref(Text);
+    Text._init = function(arena, pointer, length) {
+        length = length + 1;
+        var blob = arena._preallocate(pointer.segment, length);
+        layout.preallocated(pointer, blob, ct, length);
+        return new Text(arena, false, reader.unsafe(arena, pointer));
+    };
+    Text._initOrphan = function(arena, length) {
+        length = length + 1;
+        var blob = arena._allocate(length);
+        return new Text(arena, true, {
+            segment: blob.segment,
+            begin: blob.position,
+            length: length,
+            dataBytes: 1,
+            pointersBytes: 0
+        });
+    };
+    Text._set = function(arena, pointer, value) {
+        if (typeof value === "string") stringSet(arena, pointer, value); else if (value._TYPE.equiv(t)) copy.setListPointer(value._arena, value._layout(), arena, pointer); else throw new TypeError();
+    };
+    listField.adopt(Text);
+    listField.disown(Text);
+    listField.get(Text);
+    listField.has(Text);
+    var init = fields.list.init(Text);
+    Text._FIELD.init = function(offset) {
+        return function(length) {
+            return init(this, offset, length);
+        };
+    };
+    Text._FIELD.unionInit = function(discr, offset) {
+        return function(length) {
+            this._setWhich(discr);
+            return init(this, offset, length);
+        };
+    };
+    var objectSet = fields.list.set(Text);
+    Text._FIELD.set = function(offset) {
+        return function(value) {
+            if (typeof value === "string") {
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + offset
+                };
+                stringSet(this._arena, pointer, value);
+            } else if (value._TYPE.equiv(t)) {
+                objectSet(this, offset, value);
+            } else {
+                throw new TypeError();
+            }
+        };
+    };
+    Text._FIELD.unionSet = function(discr, offset) {
+        return function(value) {
+            if (typeof value === "string") {
+                this._setWhich(discr);
+                var pointer = {
+                    segment: this._segment,
+                    position: this._pointersSection + offset
+                };
+                stringSet(this._arena, pointer, value);
+            } else if (value._TYPE.equiv(t)) {
+                this._setWhich(discr);
+                objectSet(this, offset, value);
+            } else {
+                throw new TypeError();
+            }
+        };
     };
     Text.prototype = {
         _TYPE: t,
@@ -61,9 +110,9 @@ define([ "../reader/Text", "./list/statics", "./list/methods", "./layout/list" ]
         return this._segment.subarray(this._begin, this._begin + this._length);
     };
     Text.prototype.asBytes = function() {
-        return this._segment.subarray(this._begin, this._begin + this._length);
+        return this._segment.subarray(this._begin, this._begin + this._length - 1);
     };
-    Text.prototype.asString = function() {
+    Text.prototype.toString = function() {
         return Reader._decode(this.asBytes());
     };
     return Text;

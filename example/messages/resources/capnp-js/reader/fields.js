@@ -1,8 +1,12 @@
-define([ "./primitives" ], function(primitives) {
+define([ "./primitives", "./isNull" ], function(primitives, isNull) {
     // Float conversion helpers
     var buffer = new ArrayBuffer(8);
     var view = new DataView(buffer);
+    function throwOnInactive(actual, sought) {
+        if (actual !== sought) throw new Error("Attempted to access an inactive union member");
+    }
     return {
+        throwOnInactive: throwOnInactive,
         bool: function(defaultValue, bytes, position, bitPosition) {
             return !!(primitives.bool(bytes, position, bitPosition) ^ defaultValue);
         },
@@ -47,6 +51,26 @@ define([ "./primitives" ], function(primitives) {
                 buffer[i] = bytes[position + i] ^ defaultBytes[i];
             } while (i--);
             return view.getFloat64(0, true);
+        },
+        pointer: {
+            get: function(Type) {
+                return function(defaultPosition, context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    if (pointer.position < context._end && !isNull(pointer)) return Type._deref(context._arena, pointer, context._depth + 1); else return context._pointerDefaults[defaultPosition];
+                };
+            },
+            has: function() {
+                return function(context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    return pointer.position < context._end && !isNull(pointer);
+                };
+            }
         }
     };
 });

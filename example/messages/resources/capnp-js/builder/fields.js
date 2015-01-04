@@ -1,8 +1,12 @@
-define([ "./primitives" ], function(primitives) {
+define([ "../reader/isNull", "./copy/pointer", "./primitives", "./layout/index" ], function(isNull, copy, primitives, layout) {
     // Float conversion helpers
     var buffer = new ArrayBuffer(8);
     var view = new DataView(buffer);
+    function throwOnInactive(actual, sought) {
+        if (actual !== sought) throw new Error("Attempted to access an inactive union member");
+    }
     return {
+        throwOnInactive: throwOnInactive,
         bool: function(value, defaultValue, bytes, position, bitPosition) {
             primitives.bool(!!value ^ defaultValue, bytes, position, bitPosition);
         },
@@ -49,6 +53,131 @@ define([ "./primitives" ], function(primitives) {
             do {
                 bytes[position + i] = buffer[i] ^ defaultBytes[i];
             } while (i--);
+        },
+        pointer: {
+            disown: function(Type) {
+                return function(context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    var instance = Type._deref(context._arena, pointer);
+                    context._arena._zero(pointer, 8);
+                    instance._isOrphan = true;
+                    return instance;
+                };
+            },
+            disownReader: function(ReaderType) {
+                return function(context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    var instance = Type._deref(context._arena, pointer, 0);
+                    context._arena._zero(pointer, 8);
+                    instance._isOrphan = true;
+                    return instance;
+                };
+            },
+            has: function() {
+                return function(context, offset) {
+                    return !isNull({
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    });
+                };
+            }
+        },
+        list: {
+            adopt: function() {
+                return function(context, offset, value) {
+                    var meta = value._rt();
+                    var blob = {
+                        segment: value._segment,
+                        position: value._begin
+                    };
+                    if (meta.layout === 7) {
+                        blob.position -= 8;
+                    }
+                    layout.list.nonpreallocated(context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    }, blob, meta, value._length);
+                    value._isOrphan = false;
+                };
+            },
+            get: function(List) {
+                return function(defaultPosition, context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    if (isNull(pointer)) {
+                        var d = context._pointerDefaults[defaultPosition];
+                        copy.setListPointer(d._arena, d._layout(), context._arena, pointer);
+                    }
+                    return List._deref(context._arena, pointer);
+                };
+            },
+            init: function(List) {
+                return function(context, offset, length) {
+                    return List._init(context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    }, length);
+                };
+            },
+            set: function(List) {
+                return function(context, offset, value) {
+                    copy.setListPointer(value._arena, value._layout(), context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    });
+                };
+            }
+        },
+        struct: {
+            adopt: function() {
+                return function(context, offset, value) {
+                    layout.struct.nonpreallocated(context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    }, {
+                        segment: value._segment,
+                        position: value._dataSection
+                    }, value._rt());
+                    value._isOrphan = false;
+                };
+            },
+            get: function(Structure) {
+                return function(defaultPosition, context, offset) {
+                    var pointer = {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    };
+                    if (isNull(pointer)) {
+                        var d = context._pointerDefaults[defaultPosition];
+                        copy.setStructPointer(d._arena, d._layout(), context._arena, pointer);
+                    }
+                    return Structure._deref(context._arena, pointer);
+                };
+            },
+            init: function(Structure) {
+                return function(context, offset) {
+                    return Structure._init(context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    });
+                };
+            },
+            set: function(Structure) {
+                return function(context, offset, value) {
+                    copy.setStructPointer(value._arena, value._layout(), context._arena, {
+                        segment: context._segment,
+                        position: context._pointersSection + offset
+                    });
+                };
+            }
         }
     };
 });

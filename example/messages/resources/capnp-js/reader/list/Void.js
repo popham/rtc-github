@@ -1,4 +1,4 @@
-define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) {
+define([ "../../type", "./statics", "./methods" ], function(type, statics, methods) {
     var t = new type.Terminal();
     var ct = {
         meta: 1,
@@ -6,9 +6,10 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
         dataBytes: 0,
         pointersBytes: 0
     };
-    var Voids = function(arena, depth, list) {
+    var Voids = function(arena, depth, isOrphan, list) {
         this._arena = arena;
         this._depth = depth;
+        this._isOrphan = isOrphan;
         this._segment = list.segment;
         this._begin = 0;
         this._length = list.length;
@@ -24,7 +25,10 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
     };
     Voids._TYPE = t;
     Voids._CT = ct;
-    Voids._deref = deref(Voids);
+    Voids._FIELD = {};
+    Voids._HASH = "L|V";
+    Voids._B64_NULL = "AQAAAAAAAAA=";
+    statics.install(Voids);
     Voids.prototype = {
         _TYPE: t,
         _CT: ct,

@@ -1,4 +1,4 @@
-define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", "../wordAlign", "./copy/index", "./layout/structure", "./upgrade" ], function(isNull, Reader, reader, wordAlign, copy, builder, upgrade) {
+define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", "../wordAlign", "./copy/pointer", "./layout/structure", "./upgrade" ], function(isNull, Reader, reader, wordAlign, copy, builder, upgrade) {
     var Builder = function(alloc, zero, size) {
         if (size < 8) size = 8;
         this.__alloc = alloc;
@@ -13,21 +13,27 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
         }
         return this._segments[id];
     };
+    Builder.IS_READER = Builder.prototype.IS_READER = false;
     Builder.prototype.asReader = function(maxDepth, maxBytes) {
         if (maxDepth === undefined) maxDepth = +Infinity;
         if (maxBytes === undefined) maxBytes = +Infinity;
         return new Reader(this._segments, maxDepth, maxBytes);
     };
+    Builder.prototype.isEquivTo = function(arena) {
+        // Determine whether the two arenas share the same underlying segments.
+        return this._segments === arena._segments;
+    };
     Builder.prototype.initRoot = function(Structure) {
         var ctSize = Structure._CT.dataBytes + Structure._CT.pointersBytes;
         return Structure._init(this, this._root());
     };
-    Builder.prototype.initOrphan = function(Type) {
-        /*
-         * Only builders expose `initOrphan`, so providing a reader will error
-         * out, as it should.
-         */
-        return Type._initOrphan(this);
+    Builder.prototype.initOrphan = function(Type, optionalLength) {
+        if (optionalLength === undefined) {
+            if (Type._CT.meta === 1) throw new Error("'initOrphan' for list types requires a length");
+        } else {
+            if (Type._CT.meta === 0) throw new Error("'initOrphan' for struct types requires no length");
+        }
+        return Type._initOrphan(this, optionalLength);
     };
     Builder.prototype.getRoot = function(Structure) {
         var ct = Structure._CT;
@@ -47,7 +53,7 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
     };
     Builder.prototype.setRoot = function(reader) {
         if (reader._CT.meta !== 0) throw new Error("Root must be a struct");
-        copy.pointer.deep(reader, this, this._root());
+        copy.setStructPointer(reader._arena, reader._layout(), this, this._root());
         this._isRooted = true;
     };
     Builder.prototype.adoptRoot = function(orphan) {
@@ -57,7 +63,10 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
         if (this._isRooted) {
             throw new Error("The arena already has a root.");
         }
-        copy.pointer.shallow(orphan, this._root());
+        builder.nonpreallocated(this, this._root(), {
+            segment: orphan._segment,
+            position: orphan._dataSection
+        }, orphan._rt());
         this._isRooted = true;
     };
     Builder.prototype._root = function() {
@@ -78,7 +87,7 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
     /*
      * Allocate space on a segment.
      *
-     * bytes UInt32 - Number of bytes sought.  This number must be word-aligned.
+     * bytes UInt32 - Number of bytes sought.
      *
      * RETURNS: Datum
      * * `segment` - The segment containing the allocated space.
@@ -87,9 +96,11 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
      *   few functions.
      */
     Builder.prototype._allocate = function(bytes) {
+        var segment;
         bytes = wordAlign(bytes);
         // Greedily try to find sufficient space within `this._segments`.
-        this._segments.forEach(function(segment) {
+        for (var i = 0; i < this._segments.length; ++i) {
+            segment = this._segments[i];
             var oldEnd = segment._position;
             if (oldEnd + bytes < segment.length) {
                 segment._position += bytes;
@@ -98,10 +109,10 @@ define([ "../reader/isNull", "../reader/Arena", "../reader/layout/structure", ".
                     position: oldEnd
                 };
             }
-        });
+        }
         // Create a new segment.
         if (this._nextSize < bytes) this._nextSize = bytes;
-        var segment = this.__alloc(this._nextSize);
+        segment = this.__alloc(this._nextSize);
         // Double size for next allocation.
         this._nextSize = this._nextSize << 1;
         segment._id = this._segments.length;

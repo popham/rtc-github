@@ -1,4 +1,4 @@
-define([ "../type", "./list/deref", "./list/methods" ], function(type, deref, methods) {
+define([ "../type", "./list/statics", "./list/methods" ], function(type, statics, methods) {
     var t = new type.Terminal();
     var ct = {
         meta: 1,
@@ -6,9 +6,10 @@ define([ "../type", "./list/deref", "./list/methods" ], function(type, deref, me
         dataBytes: 1,
         pointersBytes: 0
     };
-    var Data = function(arena, depth, list) {
+    var Data = function(arena, depth, isOrphan, list) {
         this._arena = arena;
         this._depth = depth;
+        this._isOrphan = isOrphan;
         this._segment = list.segment;
         this._begin = list.begin;
         this._length = list.length;
@@ -18,7 +19,10 @@ define([ "../type", "./list/deref", "./list/methods" ], function(type, deref, me
     };
     Data._TYPE = t;
     Data._CT = ct;
-    Data._deref = deref(Data);
+    Data._FIELD = {};
+    Data._HASH = "D";
+    Data._B64_NULL = "AQAAAAIAAAA=";
+    statics.install(Data);
     Data.prototype = {
         _TYPE: t,
         _CT: ct,

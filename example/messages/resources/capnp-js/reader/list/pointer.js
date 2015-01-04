@@ -1,4 +1,4 @@
-define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) {
+define([ "../../type", "./statics", "./methods" ], function(type, statics, methods) {
     /*
      * Lists of dereferencable stuff, excluding structures.  E.g. Text, Data,
      * List(X), AnyPointer.
@@ -11,12 +11,13 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
             dataBytes: 0,
             pointersBytes: 8
         };
-        var Pointers = function(arena, depth, list) {
+        var Pointers = function(arena, depth, isOrphan, list) {
             if (depth > arena.maxDepth) {
                 throw new Error("Exceeded nesting depth limit");
             }
             this._arena = arena;
             this._depth = depth;
+            this._isOrphan = isOrphan;
             this._segment = list.segment;
             this._begin = list.begin;
             this._length = list.length;
@@ -27,7 +28,10 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
         };
         Pointers._TYPE = t;
         Pointers._CT = ct;
-        Pointers._deref = deref(Pointers);
+        Pointers._FIELD = {};
+        Pointers._HASH = "L|" + Nonstruct._HASH;
+        Pointers._B64_NULL = "AQAAAAYAAAA=";
+        statics.install(Pointers);
         Pointers.prototype = {
             _TYPE: t,
             _CT: ct,

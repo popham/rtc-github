@@ -1,9 +1,9 @@
 define([ "../../reader/list/Void", "./statics", "./methods" ], function(Reader, statics, methods) {
     var t = Reader._TYPE;
     var ct = Reader._CT;
-    var Voids = function(arena, layout, isDisowned) {
+    var Voids = function(arena, isOrphan, layout) {
         this._arena = arena;
-        this._isDisowned = isDisowned;
+        this._isOrphan = isOrphan;
         this._segment = layout.segment;
         this._begin = layout.begin;
         this._length = layout.length;
@@ -14,6 +14,8 @@ define([ "../../reader/list/Void", "./statics", "./methods" ], function(Reader, 
     Voids._READER = Reader;
     Voids._TYPE = t;
     Voids._CT = ct;
+    Voids._FIELD = {};
+    Voids._HASH = Reader._HASH;
     statics.install(Voids);
     Voids.prototype = {
         _TYPE: t,
@@ -21,6 +23,7 @@ define([ "../../reader/list/Void", "./statics", "./methods" ], function(Reader, 
         _rt: methods.rt,
         _layout: methods.layout
     };
+    methods.install(Voids.prototype);
     Voids.prototype.get = Reader.prototype.get;
     return Voids;
 });

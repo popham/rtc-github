@@ -26,6 +26,10 @@ define([ "./Arena" ], function(Arena) {
         var arena = this.createArena();
         return arena.initRoot(Struct);
     };
+    Allocator.prototype.initOrphan = function(Type, optionalLength) {
+        var arena = this.createArena();
+        return arena.initOrphan(Type, optionalLength);
+    };
     /*
      * Lifted from MDN:
      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding.

@@ -24,9 +24,17 @@ define([], function() {
         int8: int8,
         int16: int16,
         int32: int32,
+        int64: function(value, bytes, position) {
+            int32(value[0], bytes, position + 4);
+            int32(value[1], bytes, position);
+        },
         uint8: int8,
         uint16: int16,
         uint32: int32,
+        uint64: function(value, bytes, position) {
+            int32(value[0], bytes, position + 4);
+            int32(value[1], bytes, position);
+        },
         float32: function(value, bytes, position) {
             view.setFloat32(0, value, true);
             var i = 3;

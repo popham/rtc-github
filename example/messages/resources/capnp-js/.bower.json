@@ -1,6 +1,6 @@
 {
   "name": "capnp-js",
-  "version": "0.1.0",
+  "version": "0.2.11",
   "authors": [
     "Tim Popham"
   ],
@@ -18,17 +18,17 @@
     "serialization"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/popham/capnp-js-amd/",
+  "homepage": "https://github.com/popham/capnp-js-base/",
   "ignore": [
     "**/.*"
   ],
-  "_release": "0.1.0",
+  "_release": "0.2.11",
   "_resolution": {
     "type": "version",
-    "tag": "0.1.0",
-    "commit": "62cdc6a57a9fde6cb888e450f19af0ab65f61370"
+    "tag": "0.2.11",
+    "commit": "6e42a5f4f8283ffa792bcf97c21a2970e0a101f3"
   },
   "_source": "git://github.com/popham/capnp-js-amd.git",
-  "_target": "~0.1.0",
+  "_target": "~0.2.11",
   "_originalSource": "capnp-js"
 }

@@ -1,6 +1,8 @@
-define([ "./reader/Arena", "./builder/Allocator", "./builder/copy/deep" ], function(Arena, Allocator, deep) {
+define([ "./reader/Arena", "./builder/Allocator", "./builder/copy/pointer" ], function(Arena, Allocator, copy) {
     var allocator = new Allocator();
     var fromStruct = function(instance) {
+        var layout = instance._layout();
+        if (layout.meta !== 0) throw new TypeError("Message must have a structure as its root");
         var arena = instance._arena;
         var singleton;
         if (arena._segments.length !== 1) {
@@ -12,7 +14,7 @@ define([ "./reader/Arena", "./builder/Allocator", "./builder/copy/deep" ], funct
                 size += s._position;
             });
             var nonframedArena = allocator.createArena(size);
-            deep.setStructurePointer(arena, instance._layout(), nonframedArena, nonframedArena._root());
+            copy.setStructPointer(arena, layout, nonframedArena, nonframedArena._root());
             singleton = nonframedArena.getSegment(0);
         } else {
             singleton = arena.getSegment(0);

@@ -1,23 +1,26 @@
-define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init", "./methods" ], function(type, copy, list, deref, init, methods) {
+define([ "../../type", "../copy/pointer", "../layout/list", "./field/index", "./statics", "./methods" ], function(type, copy, list, field, statics, methods) {
     return function(Builder) {
         var t = new type.List(Builder._TYPE);
         var ct = Builder._LIST_CT;
-        var Structs = function(arena, list, isDisowned) {
-            if (list.dataBytes === null) {
+        var Structs = function(arena, isOrphan, layout) {
+            if (layout.dataBytes === null) {
                 throw new Error("Single bit structures are not supported");
             }
             this._arena = arena;
-            this._isDisowned = isDisowned;
-            this._segment = list.segment;
-            this._begin = list.begin;
-            this._length = list.length;
-            this._dataBytes = list.dataBytes;
-            this._pointersBytes = list.pointersBytes;
-            this._stride = list.dataBytes + list.pointersBytes;
+            this._isOrphan = isOrphan;
+            this._segment = layout.segment;
+            this._begin = layout.begin;
+            this._length = layout.length;
+            this._dataBytes = layout.dataBytes;
+            this._pointersBytes = layout.pointersBytes;
+            this._stride = layout.dataBytes + layout.pointersBytes;
         };
         Structs._TYPE = t;
         Structs._CT = ct;
-        Structs._deref = deref(Structs);
+        Structs._FIELD = {};
+        Structs._HASH = "L|" + Builder._HASH;
+        statics.deref(Structs);
+        statics.set(Structs);
         var stride = Structs._CT.dataBytes + Structs._CT.pointersBytes;
         if (Structs._CT.layout === 7) {
             Structs._init = function(arena, pointer, length) {
@@ -25,30 +28,43 @@ define([ "../../type", "../copy/pointer", "../layout/list", "./deref", "./init",
                 list.preallocated(pointer, blob, Structs._CT, length);
                 return Structs._deref(arena, pointer);
             };
+            Structs._initOrphan = function(arena, length) {
+                var blob = arena._allocate(8 + length * stride);
+                return new Structs(arena, true, {
+                    segment: blob.segment,
+                    begin: 8 + blob.position,
+                    length: length,
+                    dataBytes: ct.dataBytes,
+                    pointersBytes: ct.pointersBytes
+                });
+            };
         } else if (Structs._CT.layout === 1) {
             throw new Error("Single bit structures are not supported");
         } else {
-            Structs._init = init(Structs);
+            statics.init(Structs);
+            statics.initOrphan(Structs);
         }
+        field.install(Structs);
         Structs.prototype = {
             _TYPE: t,
             _CT: ct,
             _rt: methods.rt,
             _layout: methods.layout
         };
+        methods.install(Structs.prototype);
         Structs.prototype.get = function(index) {
             if (index < 0 || this._length <= index) {
                 throw new RangeError();
             }
             var position = this._begin + index * this._stride;
             var pointers = position + this._dataBytes;
-            return new Builder(this._arena, {
+            return new Builder(this._arena, false, {
                 meta: 0,
                 segment: this._segment,
                 dataSection: position,
                 pointersSection: pointers,
                 end: pointers + this._pointersBytes
-            }, false);
+            });
         };
         Structs.prototype.setWithCaveats = function(index, instance) {
             if (Builder._TYPE !== instance._TYPE) {

@@ -1,6 +1,6 @@
 define([ "../../reader/list/index", "../primitives", "../Data", "../Text", "./structure", "./pointer", "./Void", "./Bool", "./primitive" ], function(reader, encode, Data, Text, structure, pointer, Void, Bool, primitive) {
     return {
-        structure: structure,
+        struct: structure,
         list: pointer,
         Void: Void,
         Bool: Bool,

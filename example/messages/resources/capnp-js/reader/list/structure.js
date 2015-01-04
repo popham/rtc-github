@@ -1,16 +1,13 @@
-define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) {
-    return function(Reader, preferredListEncoding) {
+define([ "../../type", "./statics", "./methods" ], function(type, statics, methods) {
+    return function(Reader) {
         var t = new type.List(Reader._TYPE);
         var ct = Reader._LIST_CT;
-        var Structs = function(arena, depth, list) {
-            if (depth > arena.maxDepth) {
-                throw new Error("Exceeded nesting depth limit");
-            }
-            if (list.dataBytes === null) {
-                throw new Error("Single bit structures are not supported");
-            }
+        var Structs = function(arena, depth, isOrphan, list) {
+            if (depth > arena.maxDepth) throw new Error("Exceeded nesting depth limit");
+            if (list.dataBytes === null) throw new Error("Single bit structures are not supported");
             this._arena = arena;
             this._depth = depth;
+            this._isOrphan = isOrphan;
             this._segment = list.segment;
             this._begin = list.begin;
             this._length = list.length;
@@ -21,7 +18,10 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
         };
         Structs._TYPE = t;
         Structs._CT = ct;
-        Structs._deref = deref(Structs);
+        Structs._FIELD = {};
+        Structs._HASH = "L|" + Reader._HASH;
+        Structs._B64_NULL = "AQAAAAAAAAA=";
+        statics.install(Structs);
         Structs.prototype = {
             _TYPE: t,
             _CT: ct,
@@ -29,9 +29,7 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
             _layout: methods.layout
         };
         Structs.prototype.get = function(index) {
-            if (index < 0 || this._length <= index) {
-                throw new RangeError();
-            }
+            if (index < 0 || this._length <= index) throw new RangeError();
             var position = this._begin + index * this._stride;
             var pointers = position + this._dataBytes;
             /*
@@ -39,7 +37,7 @@ define([ "../../type", "./deref", "./methods" ], function(type, deref, methods) 
              * time.
              */
             this._arena.limiter.unread(this._stride);
-            return new Reader(this._arena, this._depth + 1, {
+            return new Reader(this._arena, this._depth + 1, false, {
                 meta: 0,
                 segment: this._segment,
                 dataSection: position,
