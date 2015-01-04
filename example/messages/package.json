@@ -1,20 +1,20 @@
 {
   "name": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "scripts": {
-    "clean": "rm -rf capnp/*.capnp.d",
+    "clean": "rm -rf resources/*.capnp.d",
     "polyfill": "cat polyfill/*.js | uglifyjs -o polyfill.js",
-    "capnp": "capnp compile -ojs -I node_modules/ capnp/*.capnp",
+    "capnp": "capnp compile -ojs:resources --src-prefix=capnp -I node_modules/ capnp/*.capnp",
     "build": "npm run rebuild",
     "rebuild": "npm run clean && npm run capnp && npm run polyfill"
   },
   "author": "",
   "devDependencies": {
     "bower": "^1.3.12",
-    "capnp-js-plugin": "0.2.5",
+    "capnp-js-plugin": "0.2.11",
     "uglifyjs": "^2.3.6",
-    "rtc-github-protocol": "0.0.1"
+    "rtc-github-protocol": "0.0.2"
   },
   "private": true
 }
