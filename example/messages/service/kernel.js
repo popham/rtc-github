@@ -1,15 +1,12 @@
 importScripts('../resources/requirejs/require.js');
 requirejs.config({
-    baseUrl : '../resources',
-    paths : {
-        'capnp' : '../capnp'
-    }
+    baseUrl : '../resources'
 });
 
-requirejs(['capnp-js/nonframed', 'capnp-js/builder/Allocator', 'capnp/client.capnp.d/readers', 'capnp/server.capnp.d/builders'], function (
-                     nonframed,                    Allocator,         client,                         server) {
+requirejs(['capnp-js', 'capnp-js/nonframed', 'client.capnp.d/readers', 'server.capnp.d/builders'], function (
+            capnp,               nonframed,   client,                   server) {
 
-    var allocator = new Allocator();
+    var allocator = new capnp.Allocator();
 
     onmessage = function (e) {
         console.log('Kernel receiving data.');
