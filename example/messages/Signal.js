@@ -1,5 +1,5 @@
-define(['when', 'js-signals', 'capnp-js', 'capnp-js/nonframed', 'rtc/peer.capnp.d/builders', 'server.capnp.d/readers', 'client.capnp.d/builders', './settings'], function (
-         when,      signals,   capnp,               nonframed,       peer,                    server,                   client,                      settings) {
+define(['when', 'js-signals', 'capnp-js', 'capnp-js/nonframed', 'rtc/peer.capnp.d/builders', 'rtc/server.capnp.d/readers', 'rtc/client.capnp.d/builders', './settings'], function (
+         when,      signals,   capnp,               nonframed,       peer,                        server,                       client,                      settings) {
 
     var allocator = new capnp.Allocator();
 
