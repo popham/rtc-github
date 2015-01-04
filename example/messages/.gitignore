@@ -1,1 +1,3 @@
 /node_modules/
+/resources/client.capnp.d/
+/resources/server.capnp.d/
