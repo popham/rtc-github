@@ -14,7 +14,8 @@
                 'capnp-js' : 'capnp-js',
                 domReady : 'requirejs-domready/domReady',
                 'js-signals' : 'js-signals/dist/signals',
-                'rtc-github-protocol' : 'rtc-github-protocol'
+                'rtc-github-protocol' : 'rtc-github-protocol', // Alias for path resolution from Capnproto absolute imports
+                'rtc'                 : 'rtc-github-protocol'  // A tidy alias (for hand-written `define`s)
             },
             packages: [{
                 name : 'when',
