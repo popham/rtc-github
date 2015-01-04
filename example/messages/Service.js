@@ -1,7 +1,7 @@
-define(['js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', './toCandidate', './capnp/client.capnp.d/builders', './capnp/server.capnp.d/readers'], function (
-            signals,            nonframed,                    Allocator,     toCandidate,           client,                            server) {
+define(['js-signals', 'capnp-js', 'capnp-js/nonframed', 'rtc/toCandidate', 'client.capnp.d/builders', 'server.capnp.d/readers'], function (
+            signals,   capnp,               nonframed,       toCandidate,   client,                    server) {
 
-    var allocator = new Allocator();
+    var allocator = new capnp.Allocator();
 
     var LocalClient = function (service, worker) {
         var messaged = this.messaged = new signals.Signal();

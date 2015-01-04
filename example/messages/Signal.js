@@ -1,7 +1,7 @@
-define(['when', 'js-signals', 'capnp-js/nonframed', 'capnp-js/builder/Allocator', 'rtc-github-protocol/peer.capnp.d/builders', 'rtc-github-protocol/server.capnp.d/readers', 'rtc-github-protocol/client.capnp.d/builders', './settings'], function (
-         when,      signals,            nonframed,                    Allocator,                       peer,                                        server,                                       client,                      settings) {
+define(['when', 'js-signals', 'capnp-js', 'capnp-js/nonframed', 'rtc/peer.capnp.d/builders', 'server.capnp.d/readers', 'client.capnp.d/builders', './settings'], function (
+         when,      signals,   capnp,               nonframed,       peer,                    server,                   client,                      settings) {
 
-    var allocator = new Allocator();
+    var allocator = new capnp.Allocator();
 
     var Signal = function (timeout) {
         timeout = timeout || 5000;
